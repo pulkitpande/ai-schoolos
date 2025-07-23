@@ -26,6 +26,10 @@ RUN pip install --no-cache-dir --upgrade pip && \
 ARG SERVICE_NAME
 ARG SERVICE_PORT
 
+# Set environment variables from build args
+ENV SERVICE_NAME=${SERVICE_NAME}
+ENV SERVICE_PORT=${SERVICE_PORT}
+
 # Copy service requirements
 COPY services/${SERVICE_NAME}/requirements.txt ./services/${SERVICE_NAME}/
 
@@ -48,5 +52,5 @@ EXPOSE ${SERVICE_PORT}
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:${SERVICE_PORT}/health || exit 1
 
-# Start the application
-CMD ["python", "services/${SERVICE_NAME}/main.py"] 
+# Start the application using shell to expand environment variables
+CMD python services/${SERVICE_NAME}/main.py 
