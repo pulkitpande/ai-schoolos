@@ -82,11 +82,11 @@ if [ ! -d "$APP_DIR/.git" ]; then
     print_status "Cloning AI SchoolOS repository..."
     cd $APP_DIR
     # Note: Replace with your actual repository URL
-    git clone https://github.com/your-username/ai-schoolos.git .
+    git clone https://github.com/pulkitpande/ai-schoolos.git .
 else
     print_warning "Repository already exists, pulling latest changes..."
     cd $APP_DIR
-    git pull origin main
+    git pull origin master
 fi
 
 # Set proper permissions
@@ -204,7 +204,7 @@ print_status "Creating update script..."
 cat > $APP_DIR/update.sh << 'EOF'
 #!/bin/bash
 cd /opt/ai-schoolos
-git pull origin main
+git pull origin master
 docker-compose -f docker-compose.simple.yml down
 docker-compose -f docker-compose.simple.yml up -d --build
 echo "Update completed!"
