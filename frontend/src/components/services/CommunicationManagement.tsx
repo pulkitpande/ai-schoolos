@@ -197,19 +197,19 @@ export default function CommunicationManagement({ schoolId }: CommunicationManag
                               <div className="flex-shrink-0 h-10 w-10">
                                 <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
                                   <span className="text-sm font-medium text-blue-600">
-                                    {message.sender_name?.charAt(0)}
+                                    {message.senderId?.charAt(0)}
                                   </span>
                                 </div>
                               </div>
                               <div className="ml-4">
-                                <div className="text-sm font-medium text-gray-900">{message.sender_name}</div>
-                                <div className="text-sm text-gray-500">{message.sender_role}</div>
+                                <div className="text-sm font-medium text-gray-900">{message.senderId}</div>
+                                <div className="text-sm text-gray-500">Sender</div>
                               </div>
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">{message.recipient_name}</div>
-                            <div className="text-sm text-gray-500">{message.recipient_role}</div>
+                            <div className="text-sm text-gray-900">{message.recipientId}</div>
+                            <div className="text-sm text-gray-500">Recipient</div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-sm font-medium text-gray-900">{message.subject}</div>
@@ -218,9 +218,9 @@ export default function CommunicationManagement({ schoolId }: CommunicationManag
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span
                               className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                message.status === 'read'
+                                message.status === 'delivered'
                                   ? 'bg-green-100 text-green-800'
-                                  : message.status === 'unread'
+                                  : message.status === 'sent'
                                   ? 'bg-yellow-100 text-yellow-800'
                                   : 'bg-gray-100 text-gray-800'
                               }`}
@@ -229,7 +229,7 @@ export default function CommunicationManagement({ schoolId }: CommunicationManag
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {new Date(message.created_at || '').toLocaleDateString()}
+                            {new Date(message.createdAt || '').toLocaleDateString()}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div className="flex gap-2">
