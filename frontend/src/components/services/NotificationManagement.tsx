@@ -190,7 +190,7 @@ export default function NotificationManagement({ schoolId }: NotificationManagem
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      {notifications?.data?.map((notification) => (
+                      {notifications?.notifications?.map((notification) => (
                         <tr key={notification.id} className="hover:bg-gray-50">
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
@@ -209,14 +209,14 @@ export default function NotificationManagement({ schoolId }: NotificationManagem
                             {notification.type}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {notification.recipients_count || 0} users
+                            1 user
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span
                               className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                notification.status === 'sent'
+                                notification.status === 'read'
                                   ? 'bg-green-100 text-green-800'
-                                  : notification.status === 'pending'
+                                  : notification.status === 'unread'
                                   ? 'bg-yellow-100 text-yellow-800'
                                   : 'bg-gray-100 text-gray-800'
                               }`}
@@ -225,7 +225,7 @@ export default function NotificationManagement({ schoolId }: NotificationManagem
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {new Date(notification.created_at || '').toLocaleDateString()}
+                            {new Date(notification.createdAt || '').toLocaleDateString()}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div className="flex gap-2">

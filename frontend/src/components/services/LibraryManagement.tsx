@@ -193,7 +193,7 @@ export default function LibraryManagement({ schoolId }: LibraryManagementProps) 
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      {books?.data?.map((book) => (
+                      {books?.books?.map((book) => (
                         <tr key={book.id} className="hover:bg-gray-50">
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">

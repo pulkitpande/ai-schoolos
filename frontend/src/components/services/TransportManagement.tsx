@@ -190,7 +190,7 @@ export default function TransportManagement({ schoolId }: TransportManagementPro
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      {vehicles?.data?.map((vehicle) => (
+                      {vehicles?.vehicles?.map((vehicle) => (
                         <tr key={vehicle.id} className="hover:bg-gray-50">
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
@@ -200,13 +200,13 @@ export default function TransportManagement({ schoolId }: TransportManagementPro
                                 </div>
                               </div>
                               <div className="ml-4">
-                                <div className="text-sm font-medium text-gray-900">{vehicle.vehicle_number}</div>
+                                <div className="text-sm font-medium text-gray-900">{vehicle.vehicleNumber}</div>
                                 <div className="text-sm text-gray-500">{vehicle.model}</div>
                               </div>
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {vehicle.vehicle_type}
+                            {vehicle.vehicleType}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {vehicle.capacity} passengers
@@ -225,7 +225,7 @@ export default function TransportManagement({ schoolId }: TransportManagementPro
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {vehicle.driver_name || 'Unassigned'}
+                            {vehicle.driverId || 'Unassigned'}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div className="flex gap-2">

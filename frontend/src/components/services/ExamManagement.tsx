@@ -190,7 +190,7 @@ export default function ExamManagement({ schoolId }: ExamManagementProps) {
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      {exams?.data?.map((exam) => (
+                      {exams?.exams?.map((exam) => (
                         <tr key={exam.id} className="hover:bg-gray-50">
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
