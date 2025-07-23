@@ -109,7 +109,19 @@ export class NotificationService {
 
   // Get notifications
   async getNotifications(filters?: NotificationFilters): Promise<NotificationListResponse> {
-    const response = await apiService.get<NotificationListResponse>(this.NOTIFICATION_ENDPOINTS.NOTIFICATIONS, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<NotificationListResponse>(
+      `${this.NOTIFICATION_ENDPOINTS.NOTIFICATIONS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -162,8 +174,19 @@ export class NotificationService {
 
   // Get user notifications
   async getUserNotifications(userId: string, filters?: any): Promise<Notification[]> {
-    const params = { ...filters, userId };
-    const response = await apiService.get<Notification[]>(`${this.NOTIFICATION_ENDPOINTS.NOTIFICATIONS}/user/${userId}`, params);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<Notification[]>(
+      `${this.NOTIFICATION_ENDPOINTS.NOTIFICATIONS}/user/${userId}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -194,7 +217,19 @@ export class NotificationService {
 
   // Get notification templates
   async getNotificationTemplates(filters?: any): Promise<NotificationTemplate[]> {
-    const response = await apiService.get<NotificationTemplate[]>(this.NOTIFICATION_ENDPOINTS.TEMPLATES, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<NotificationTemplate[]>(
+      `${this.NOTIFICATION_ENDPOINTS.TEMPLATES}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -246,8 +281,16 @@ export class NotificationService {
   }
 
   // Get notification channels
-  async getNotificationChannels(userId: string): Promise<NotificationChannel[]> {
-    const response = await apiService.get<NotificationChannel[]>(`${this.NOTIFICATION_ENDPOINTS.CHANNELS}/user/${userId}`);
+  async getNotificationChannels(userId?: string): Promise<NotificationChannel[]> {
+    const params = new URLSearchParams();
+    
+    if (userId) {
+      params.append('userId', userId);
+    }
+
+    const response = await apiService.get<NotificationChannel[]>(
+      `${this.NOTIFICATION_ENDPOINTS.CHANNELS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -333,7 +376,19 @@ export class NotificationService {
 
   // Get notification schedules
   async getNotificationSchedules(filters?: any): Promise<NotificationSchedule[]> {
-    const response = await apiService.get<NotificationSchedule[]>(this.NOTIFICATION_ENDPOINTS.SCHEDULES, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<NotificationSchedule[]>(
+      `${this.NOTIFICATION_ENDPOINTS.SCHEDULES}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -397,8 +452,23 @@ export class NotificationService {
 
   // Get notification reports
   async getNotificationReports(schoolId?: string, dateFrom?: string, dateTo?: string): Promise<any> {
-    const params = { schoolId, dateFrom, dateTo };
-    const response = await apiService.get<any>(this.NOTIFICATION_ENDPOINTS.REPORTS, params);
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+    
+    if (dateFrom) {
+      params.append('dateFrom', dateFrom);
+    }
+    
+    if (dateTo) {
+      params.append('dateTo', dateTo);
+    }
+
+    const response = await apiService.get<any>(
+      `${this.NOTIFICATION_ENDPOINTS.REPORTS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -407,16 +477,23 @@ export class NotificationService {
     throw new Error(response.message || 'Failed to fetch notification reports');
   }
 
-  // Get notification statistics
+  // Get notification stats
   async getNotificationStats(schoolId?: string): Promise<any> {
-    const params = schoolId ? { schoolId } : {};
-    const response = await apiService.get<any>(`${this.NOTIFICATION_ENDPOINTS.REPORTS}/stats`, params);
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+
+    const response = await apiService.get<any>(
+      `${this.NOTIFICATION_ENDPOINTS.REPORTS}/stats?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
     }
     
-    throw new Error(response.message || 'Failed to fetch notification statistics');
+    throw new Error(response.message || 'Failed to fetch notification stats');
   }
 }
 

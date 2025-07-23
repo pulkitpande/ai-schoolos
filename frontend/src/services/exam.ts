@@ -96,6 +96,7 @@ export class ExamService {
     GRADES: '/api/v1/exams/grades',
     REPORTS: '/api/v1/exams/reports',
     STUDENT_RESULTS: '/api/v1/exams/students',
+    QUESTIONS: '/api/v1/exams/questions',
   };
 
   // Get exams
@@ -163,75 +164,6 @@ export class ExamService {
     }
   }
 
-  // Get exam results
-  async getExamResults(examId?: string, filters?: any): Promise<ExamResult[]> {
-    const params = new URLSearchParams();
-    
-    if (examId) {
-      params.append('examId', examId);
-    }
-    
-    if (filters) {
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          params.append(key, value.toString());
-        }
-      });
-    }
-
-    const response = await apiService.get<ExamResult[]>(
-      `${this.EXAM_ENDPOINTS.RESULTS}?${params.toString()}`
-    );
-    
-    if (response.success && response.data) {
-      return response.data;
-    }
-    
-    throw new Error(response.message || 'Failed to fetch exam results');
-  }
-
-  // Get exam result by ID
-  async getExamResult(id: string): Promise<ExamResult> {
-    const response = await apiService.get<ExamResult>(`${this.EXAM_ENDPOINTS.RESULTS}/${id}`);
-    
-    if (response.success && response.data) {
-      return response.data;
-    }
-    
-    throw new Error(response.message || 'Failed to fetch exam result');
-  }
-
-  // Create exam result
-  async createExamResult(data: Partial<ExamResult>): Promise<ExamResult> {
-    const response = await apiService.post<ExamResult>(this.EXAM_ENDPOINTS.RESULTS, data);
-    
-    if (response.success && response.data) {
-      return response.data;
-    }
-    
-    throw new Error(response.message || 'Failed to create exam result');
-  }
-
-  // Update exam result
-  async updateExamResult(id: string, data: Partial<ExamResult>): Promise<ExamResult> {
-    const response = await apiService.put<ExamResult>(`${this.EXAM_ENDPOINTS.RESULTS}/${id}`, data);
-    
-    if (response.success && response.data) {
-      return response.data;
-    }
-    
-    throw new Error(response.message || 'Failed to update exam result');
-  }
-
-  // Delete exam result
-  async deleteExamResult(id: string): Promise<void> {
-    const response = await apiService.delete(`${this.EXAM_ENDPOINTS.RESULTS}/${id}`);
-    
-    if (!response.success) {
-      throw new Error(response.message || 'Failed to delete exam result');
-    }
-  }
-
   // Get exam schedules
   async getExamSchedules(filters?: any): Promise<ExamSchedule[]> {
     const params = new URLSearchParams();
@@ -294,6 +226,71 @@ export class ExamService {
     
     if (!response.success) {
       throw new Error(response.message || 'Failed to delete exam schedule');
+    }
+  }
+
+  // Get exam results
+  async getExamResults(filters?: any): Promise<ExamResult[]> {
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<ExamResult[]>(
+      `${this.EXAM_ENDPOINTS.RESULTS}?${params.toString()}`
+    );
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to fetch exam results');
+  }
+
+  // Get exam result by ID
+  async getExamResult(id: string): Promise<ExamResult> {
+    const response = await apiService.get<ExamResult>(`${this.EXAM_ENDPOINTS.RESULTS}/${id}`);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to fetch exam result');
+  }
+
+  // Create exam result
+  async createExamResult(data: Partial<ExamResult>): Promise<ExamResult> {
+    const response = await apiService.post<ExamResult>(this.EXAM_ENDPOINTS.RESULTS, data);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to create exam result');
+  }
+
+  // Update exam result
+  async updateExamResult(id: string, data: Partial<ExamResult>): Promise<ExamResult> {
+    const response = await apiService.put<ExamResult>(`${this.EXAM_ENDPOINTS.RESULTS}/${id}`, data);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to update exam result');
+  }
+
+  // Delete exam result
+  async deleteExamResult(id: string): Promise<void> {
+    const response = await apiService.delete(`${this.EXAM_ENDPOINTS.RESULTS}/${id}`);
+    
+    if (!response.success) {
+      throw new Error(response.message || 'Failed to delete exam result');
     }
   }
 
@@ -377,15 +374,57 @@ export class ExamService {
     throw new Error(response.message || 'Failed to fetch student results');
   }
 
-  // Get student grades
-  async getStudentGrades(studentId: string): Promise<Grade[]> {
-    const response = await apiService.get<Grade[]>(`${this.EXAM_ENDPOINTS.STUDENT_RESULTS}/${studentId}/grades`);
+  // Get exam questions
+  async getExamQuestions(examId: string): Promise<any[]> { // Assuming ExamQuestion is not defined, using 'any' for now
+    const response = await apiService.get<any[]>(`${this.EXAM_ENDPOINTS.QUESTIONS}/${examId}/questions`);
     
     if (response.success && response.data) {
       return response.data;
     }
     
-    throw new Error(response.message || 'Failed to fetch student grades');
+    throw new Error(response.message || 'Failed to fetch exam questions');
+  }
+
+  // Get exam question by ID
+  async getExamQuestion(id: string): Promise<any> { // Assuming ExamQuestion is not defined, using 'any' for now
+    const response = await apiService.get<any>(`${this.EXAM_ENDPOINTS.QUESTIONS}/${id}`);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to fetch exam question');
+  }
+
+  // Create exam question
+  async createExamQuestion(data: Partial<any>): Promise<any> { // Assuming ExamQuestion is not defined, using 'any' for now
+    const response = await apiService.post<any>(this.EXAM_ENDPOINTS.QUESTIONS, data);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to create exam question');
+  }
+
+  // Update exam question
+  async updateExamQuestion(id: string, data: Partial<any>): Promise<any> { // Assuming ExamQuestion is not defined, using 'any' for now
+    const response = await apiService.put<any>(`${this.EXAM_ENDPOINTS.QUESTIONS}/${id}`, data);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to update exam question');
+  }
+
+  // Delete exam question
+  async deleteExamQuestion(id: string): Promise<void> {
+    const response = await apiService.delete(`${this.EXAM_ENDPOINTS.QUESTIONS}/${id}`);
+    
+    if (!response.success) {
+      throw new Error(response.message || 'Failed to delete exam question');
+    }
   }
 
   // Get exam reports

@@ -88,15 +88,37 @@ export class FeeService {
   };
 
   // Get fee structures
-  async getFeeStructures(schoolId?: string): Promise<FeeStructure[]> {
-    const params = schoolId ? { schoolId } : {};
-    const response = await apiService.get<FeeStructure[]>(this.FEE_ENDPOINTS.STRUCTURES, params);
+  async getFeeStructures(schoolId?: string, classId?: string): Promise<FeeStructure[]> {
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+    
+    if (classId) {
+      params.append('classId', classId);
+    }
+
+    const response = await apiService.get<FeeStructure[]>(
+      `${this.FEE_ENDPOINTS.STRUCTURES}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
     }
     
     throw new Error(response.message || 'Failed to fetch fee structures');
+  }
+
+  // Get fee structure by ID
+  async getFeeStructure(id: string): Promise<FeeStructure> {
+    const response = await apiService.get<FeeStructure>(`${this.FEE_ENDPOINTS.STRUCTURES}/${id}`);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to fetch fee structure');
   }
 
   // Create fee structure
@@ -132,7 +154,19 @@ export class FeeService {
 
   // Get fee payments
   async getFeePayments(filters?: FeeFilters): Promise<FeeListResponse> {
-    const response = await apiService.get<FeeListResponse>(this.FEE_ENDPOINTS.PAYMENTS, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<FeeListResponse>(
+      `${this.FEE_ENDPOINTS.PAYMENTS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -205,6 +239,17 @@ export class FeeService {
     throw new Error(response.message || 'Failed to fetch fee discounts');
   }
 
+  // Get fee discount by ID
+  async getFeeDiscount(id: string): Promise<FeeDiscount> {
+    const response = await apiService.get<FeeDiscount>(`${this.FEE_ENDPOINTS.DISCOUNTS}/${id}`);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to fetch fee discount');
+  }
+
   // Create fee discount
   async createFeeDiscount(data: Partial<FeeDiscount>): Promise<FeeDiscount> {
     const response = await apiService.post<FeeDiscount>(this.FEE_ENDPOINTS.DISCOUNTS, data);
@@ -237,15 +282,41 @@ export class FeeService {
   }
 
   // Get financial records
-  async getFinancialRecords(schoolId?: string, filters?: any): Promise<FinancialRecord[]> {
-    const params = { ...filters, schoolId };
-    const response = await apiService.get<FinancialRecord[]>(this.FEE_ENDPOINTS.RECORDS, params);
+  async getFinancialRecords(schoolId?: string, dateFrom?: string, dateTo?: string): Promise<FinancialRecord[]> {
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+    
+    if (dateFrom) {
+      params.append('dateFrom', dateFrom);
+    }
+    
+    if (dateTo) {
+      params.append('dateTo', dateTo);
+    }
+
+    const response = await apiService.get<FinancialRecord[]>(
+      `${this.FEE_ENDPOINTS.RECORDS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
     }
     
     throw new Error(response.message || 'Failed to fetch financial records');
+  }
+
+  // Get financial record by ID
+  async getFinancialRecord(id: string): Promise<FinancialRecord> {
+    const response = await apiService.get<FinancialRecord>(`${this.FEE_ENDPOINTS.RECORDS}/${id}`);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to fetch financial record');
   }
 
   // Create financial record
@@ -259,10 +330,45 @@ export class FeeService {
     throw new Error(response.message || 'Failed to create financial record');
   }
 
+  // Update financial record
+  async updateFinancialRecord(id: string, data: Partial<FinancialRecord>): Promise<FinancialRecord> {
+    const response = await apiService.put<FinancialRecord>(`${this.FEE_ENDPOINTS.RECORDS}/${id}`, data);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to update financial record');
+  }
+
+  // Delete financial record
+  async deleteFinancialRecord(id: string): Promise<void> {
+    const response = await apiService.delete(`${this.FEE_ENDPOINTS.RECORDS}/${id}`);
+    
+    if (!response.success) {
+      throw new Error(response.message || 'Failed to delete financial record');
+    }
+  }
+
   // Get fee reports
   async getFeeReports(schoolId?: string, dateFrom?: string, dateTo?: string): Promise<any> {
-    const params = { schoolId, dateFrom, dateTo };
-    const response = await apiService.get<any>(this.FEE_ENDPOINTS.REPORTS, params);
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+    
+    if (dateFrom) {
+      params.append('dateFrom', dateFrom);
+    }
+    
+    if (dateTo) {
+      params.append('dateTo', dateTo);
+    }
+
+    const response = await apiService.get<any>(
+      `${this.FEE_ENDPOINTS.REPORTS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -271,16 +377,23 @@ export class FeeService {
     throw new Error(response.message || 'Failed to fetch fee reports');
   }
 
-  // Get payment statistics
-  async getPaymentStats(schoolId?: string): Promise<any> {
-    const params = schoolId ? { schoolId } : {};
-    const response = await apiService.get<any>(`${this.FEE_ENDPOINTS.REPORTS}/stats`, params);
+  // Get fee stats
+  async getFeeStats(schoolId?: string): Promise<any> {
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+
+    const response = await apiService.get<any>(
+      `${this.FEE_ENDPOINTS.REPORTS}/stats?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
     }
     
-    throw new Error(response.message || 'Failed to fetch payment statistics');
+    throw new Error(response.message || 'Failed to fetch fee stats');
   }
 }
 

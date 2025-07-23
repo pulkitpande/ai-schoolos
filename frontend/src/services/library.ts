@@ -100,7 +100,19 @@ export class LibraryService {
 
   // Get books
   async getBooks(filters?: LibraryFilters): Promise<LibraryListResponse> {
-    const response = await apiService.get<LibraryListResponse>(this.LIBRARY_ENDPOINTS.BOOKS, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<LibraryListResponse>(
+      `${this.LIBRARY_ENDPOINTS.BOOKS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -153,7 +165,19 @@ export class LibraryService {
 
   // Get book borrowings
   async getBookBorrowings(filters?: any): Promise<BookBorrowing[]> {
-    const response = await apiService.get<BookBorrowing[]>(this.LIBRARY_ENDPOINTS.BORROWINGS, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<BookBorrowing[]>(
+      `${this.LIBRARY_ENDPOINTS.BORROWINGS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -206,7 +230,19 @@ export class LibraryService {
 
   // Get library members
   async getLibraryMembers(filters?: any): Promise<LibraryMember[]> {
-    const response = await apiService.get<LibraryMember[]>(this.LIBRARY_ENDPOINTS.MEMBERS, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<LibraryMember[]>(
+      `${this.LIBRARY_ENDPOINTS.MEMBERS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -259,7 +295,19 @@ export class LibraryService {
 
   // Get library transactions
   async getLibraryTransactions(filters?: any): Promise<LibraryTransaction[]> {
-    const response = await apiService.get<LibraryTransaction[]>(this.LIBRARY_ENDPOINTS.TRANSACTIONS, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<LibraryTransaction[]>(
+      `${this.LIBRARY_ENDPOINTS.TRANSACTIONS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -345,8 +393,23 @@ export class LibraryService {
 
   // Get library reports
   async getLibraryReports(schoolId?: string, dateFrom?: string, dateTo?: string): Promise<any> {
-    const params = { schoolId, dateFrom, dateTo };
-    const response = await apiService.get<any>(this.LIBRARY_ENDPOINTS.REPORTS, params);
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+    
+    if (dateFrom) {
+      params.append('dateFrom', dateFrom);
+    }
+    
+    if (dateTo) {
+      params.append('dateTo', dateTo);
+    }
+
+    const response = await apiService.get<any>(
+      `${this.LIBRARY_ENDPOINTS.REPORTS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -355,16 +418,23 @@ export class LibraryService {
     throw new Error(response.message || 'Failed to fetch library reports');
   }
 
-  // Get library statistics
+  // Get library stats
   async getLibraryStats(schoolId?: string): Promise<any> {
-    const params = schoolId ? { schoolId } : {};
-    const response = await apiService.get<any>(`${this.LIBRARY_ENDPOINTS.REPORTS}/stats`, params);
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+
+    const response = await apiService.get<any>(
+      `${this.LIBRARY_ENDPOINTS.REPORTS}/stats?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
     }
     
-    throw new Error(response.message || 'Failed to fetch library statistics');
+    throw new Error(response.message || 'Failed to fetch library stats');
   }
 }
 
