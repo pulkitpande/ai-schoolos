@@ -407,7 +407,7 @@ export default function StudentPortal() {
                       {studentsLoading ? (
                         <div className="text-center text-gray-500">Loading courses...</div>
                       ) : studentsError ? (
-                        <div className="text-center text-red-500">{studentsError.message || 'Failed to load courses'}</div>
+                        <div className="text-center text-red-500">{(studentsError as any)?.message || 'Failed to load courses'}</div>
                       ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                           {(studentsData?.students || []).map((student: any, index: number) => (
@@ -452,7 +452,7 @@ export default function StudentPortal() {
                       {homeworkLoading ? (
                         <div className="text-center text-gray-500">Loading assignments...</div>
                       ) : homeworkError ? (
-                        <div className="text-center text-red-500">{homeworkError.message || 'Failed to load assignments'}</div>
+                        <div className="text-center text-red-500">{(homeworkError as any)?.message || 'Failed to load assignments'}</div>
                       ) : (
                         <div className="space-y-4">
                           {(homeworkData?.homework || []).map((assignment: any) => (
@@ -513,7 +513,7 @@ export default function StudentPortal() {
                       {attendanceLoading ? (
                         <div className="text-center text-gray-500">Loading attendance...</div>
                       ) : attendanceError ? (
-                        <div className="text-center text-red-500">{attendanceError.message || 'Failed to load attendance'}</div>
+                        <div className="text-center text-red-500">{(attendanceError as any)?.message || 'Failed to load attendance'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
@@ -570,7 +570,7 @@ export default function StudentPortal() {
                       {timetableLoading ? (
                         <div className="text-center text-gray-500">Loading timetable...</div>
                       ) : timetableError ? (
-                        <div className="text-center text-red-500">{timetableError.message || 'Failed to load timetable'}</div>
+                        <div className="text-center text-red-500">{(timetableError as any)?.message || 'Failed to load timetable'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
@@ -611,7 +611,7 @@ export default function StudentPortal() {
                       {libraryLoading ? (
                         <div className="text-center text-gray-500">Loading library...</div>
                       ) : libraryError ? (
-                        <div className="text-center text-red-500">{libraryError.message || 'Failed to load library'}</div>
+                        <div className="text-center text-red-500">{(libraryError as any)?.message || 'Failed to load library'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
@@ -669,7 +669,7 @@ export default function StudentPortal() {
                       {messageLoading ? (
                         <div className="text-center text-gray-500">Loading messages...</div>
                       ) : messageError ? (
-                        <div className="text-center text-red-500">{messageError.message || 'Failed to load messages'}</div>
+                        <div className="text-center text-red-500">{(messageError as any)?.message || 'Failed to load messages'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
