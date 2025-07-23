@@ -201,15 +201,15 @@ export default function ExamManagement({ schoolId }: ExamManagementProps) {
                               </div>
                               <div className="ml-4">
                                 <div className="text-sm font-medium text-gray-900">{exam.name}</div>
-                                <div className="text-sm text-gray-500">{exam.exam_type}</div>
+                                <div className="text-sm text-gray-500">{exam.examType}</div>
                               </div>
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {exam.subject}
+                            {exam.subjectId}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {new Date(exam.exam_date || '').toLocaleDateString()}
+                            {new Date(exam.examDate || '').toLocaleDateString()}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {exam.duration} minutes
@@ -217,14 +217,12 @@ export default function ExamManagement({ schoolId }: ExamManagementProps) {
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span
                               className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                exam.status === 'scheduled'
-                                  ? 'bg-blue-100 text-blue-800'
-                                  : exam.status === 'completed'
+                                exam.isActive
                                   ? 'bg-green-100 text-green-800'
-                                  : 'bg-yellow-100 text-yellow-800'
+                                  : 'bg-red-100 text-red-800'
                               }`}
                             >
-                              {exam.status}
+                              {exam.isActive ? 'Active' : 'Inactive'}
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
