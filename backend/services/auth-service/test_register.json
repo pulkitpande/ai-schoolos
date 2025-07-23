@@ -1,0 +1,8 @@
+{
+  "email": "testuser1@school.com",
+  "password": "TestPassword123!",
+  "tenant_id": "f0cc10ab-78c8-469f-ade9-f45a48070a18",
+  "profile_data": {
+    "name": "Test User"
+  }
+} 

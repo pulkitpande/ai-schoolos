@@ -1,0 +1,456 @@
+version: '3.8'
+
+services:
+  # Frontend Application (Optimized)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.optimized
+    container_name: ai-schoolos-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://api-gateway:8000
+      - NEXT_PUBLIC_AUTH_SERVICE_URL=http://auth-service:8001
+      - NEXT_PUBLIC_STUDENT_SERVICE_URL=http://student-service:8002
+      - NEXT_PUBLIC_STAFF_SERVICE_URL=http://staff-service:8003
+      - NEXT_PUBLIC_FEE_SERVICE_URL=http://fee-service:8004
+      - NEXT_PUBLIC_HOMEWORK_SERVICE_URL=http://homework-service:8005
+      - NEXT_PUBLIC_LIBRARY_SERVICE_URL=http://library-service:8006
+      - NEXT_PUBLIC_EXAM_SERVICE_URL=http://exam-service:8007
+      - NEXT_PUBLIC_TIMETABLE_SERVICE_URL=http://timetable-service:8008
+      - NEXT_PUBLIC_ATTENDANCE_SERVICE_URL=http://attendance-service:8009
+      - NEXT_PUBLIC_TRANSPORT_SERVICE_URL=http://transport-service:8010
+      - NEXT_PUBLIC_COMMUNICATION_SERVICE_URL=http://communication-service:8011
+      - NEXT_PUBLIC_ANALYTICS_SERVICE_URL=http://analytics-service:8012
+      - NEXT_PUBLIC_NOTIFICATION_SERVICE_URL=http://notification-service:8013
+      - NEXT_PUBLIC_CONFIG_SERVICE_URL=http://config-service:8014
+      - NEXT_PUBLIC_SUPER_ADMIN_SERVICE_URL=http://super-admin-service:8015
+      - NEXT_PUBLIC_AI_SERVICE_URL=http://ai-service:8016
+      - NEXT_PUBLIC_AI_ANALYTICS_SERVICE_URL=http://ai-analytics-service:8017
+    depends_on:
+      - api-gateway
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+
+  # Infrastructure Services (Memory-based)
+  postgres:
+    image: postgres:15-alpine
+    container_name: ai-schoolos-postgres
+    environment:
+      POSTGRES_DB: schoolos
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+    # No volumes - data will be lost on restart (as requested)
+
+  redis:
+    image: redis:7-alpine
+    container_name: ai-schoolos-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+    # No volumes - data will be lost on restart (as requested)
+
+  mongodb:
+    image: mongo:6
+    container_name: ai-schoolos-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: schoolos
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+    # No volumes - data will be lost on restart (as requested)
+
+  minio:
+    image: minio/minio:latest
+    container_name: ai-schoolos-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+    # No volumes - data will be lost on restart (as requested)
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./backend
+      dockerfile: api-gateway/Dockerfile.optimized
+    container_name: ai-schoolos-api-gateway
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - MINIO_ENDPOINT=minio:9000
+      - LOG_LEVEL=INFO
+    depends_on:
+      - postgres
+      - redis
+      - mongodb
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+
+  # Auth Service
+  auth-service:
+    build:
+      context: ./backend
+      dockerfile: services/auth-service/Dockerfile.optimized
+    container_name: ai-schoolos-auth-service
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+      - LOG_LEVEL=INFO
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+
+  # Student Service
+  student-service:
+    build:
+      context: ./backend
+      dockerfile: services/student-service/Dockerfile.optimized
+    container_name: ai-schoolos-student-service
+    ports:
+      - "8002:8002"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+
+  # Staff Service
+  staff-service:
+    build:
+      context: ./backend
+      dockerfile: services/staff-service/Dockerfile.optimized
+    container_name: ai-schoolos-staff-service
+    ports:
+      - "8003:8003"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+
+  # Fee Service
+  fee-service:
+    build:
+      context: ./backend
+      dockerfile: services/fee-service/Dockerfile.optimized
+    container_name: ai-schoolos-fee-service
+    ports:
+      - "8004:8004"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+
+  # Homework Service
+  homework-service:
+    build:
+      context: ./backend
+      dockerfile: services/homework-service/Dockerfile.optimized
+    container_name: ai-schoolos-homework-service
+    ports:
+      - "8005:8005"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+
+  # Library Service
+  library-service:
+    build:
+      context: ./backend
+      dockerfile: services/library-service/Dockerfile.optimized
+    container_name: ai-schoolos-library-service
+    ports:
+      - "8006:8006"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+
+  # Exam Service
+  exam-service:
+    build:
+      context: ./backend
+      dockerfile: services/exam-service/Dockerfile.optimized
+    container_name: ai-schoolos-exam-service
+    ports:
+      - "8007:8007"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+
+  # Timetable Service
+  timetable-service:
+    build:
+      context: ./backend
+      dockerfile: services/timetable-service/Dockerfile.optimized
+    container_name: ai-schoolos-timetable-service
+    ports:
+      - "8008:8008"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+
+  # Attendance Service
+  attendance-service:
+    build:
+      context: ./backend
+      dockerfile: services/attendance-service/Dockerfile.optimized
+    container_name: ai-schoolos-attendance-service
+    ports:
+      - "8009:8009"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+
+  # Transport Service
+  transport-service:
+    build:
+      context: ./backend
+      dockerfile: services/transport-service/Dockerfile.optimized
+    container_name: ai-schoolos-transport-service
+    ports:
+      - "8010:8010"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+
+  # Communication Service
+  communication-service:
+    build:
+      context: ./backend
+      dockerfile: services/communication-service/Dockerfile.optimized
+    container_name: ai-schoolos-communication-service
+    ports:
+      - "8011:8011"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+
+  # Analytics Service
+  analytics-service:
+    build:
+      context: ./backend
+      dockerfile: services/analytics-service/Dockerfile.optimized
+    container_name: ai-schoolos-analytics-service
+    ports:
+      - "8012:8012"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+
+  # Notification Service
+  notification-service:
+    build:
+      context: ./backend
+      dockerfile: services/notification-service/Dockerfile.optimized
+    container_name: ai-schoolos-notification-service
+    ports:
+      - "8013:8013"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+
+  # Config Service
+  config-service:
+    build:
+      context: ./backend
+      dockerfile: services/config-service/Dockerfile.optimized
+    container_name: ai-schoolos-config-service
+    ports:
+      - "8014:8014"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+
+  # Super Admin Service
+  super-admin-service:
+    build:
+      context: ./backend
+      dockerfile: services/super-admin-service/Dockerfile.optimized
+    container_name: ai-schoolos-super-admin-service
+    ports:
+      - "8015:8015"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+
+  # AI Service
+  ai-service:
+    build:
+      context: ./backend
+      dockerfile: services/ai-service/Dockerfile.optimized
+    container_name: ai-schoolos-ai-service
+    ports:
+      - "8016:8016"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+
+  # AI Analytics Service
+  ai-analytics-service:
+    build:
+      context: ./backend
+      dockerfile: services/ai-analytics-service/Dockerfile.optimized
+    container_name: ai-schoolos-ai-analytics-service
+    ports:
+      - "8017:8017"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ai-schoolos-network
+    restart: unless-stopped
+
+networks:
+  ai-schoolos-network:
+    driver: bridge 

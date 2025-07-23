@@ -1,0 +1,622 @@
+version: '3.8'
+
+services:
+  # Frontend Application
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ai-schoolos-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_AUTH_SERVICE_URL=http://localhost:8001
+      - NEXT_PUBLIC_STUDENT_SERVICE_URL=http://localhost:8002
+      - NEXT_PUBLIC_STAFF_SERVICE_URL=http://localhost:8003
+      - NEXT_PUBLIC_FEE_SERVICE_URL=http://localhost:8004
+      - NEXT_PUBLIC_HOMEWORK_SERVICE_URL=http://localhost:8005
+      - NEXT_PUBLIC_LIBRARY_SERVICE_URL=http://localhost:8006
+      - NEXT_PUBLIC_EXAM_SERVICE_URL=http://localhost:8007
+      - NEXT_PUBLIC_TIMETABLE_SERVICE_URL=http://localhost:8008
+      - NEXT_PUBLIC_ATTENDANCE_SERVICE_URL=http://localhost:8009
+      - NEXT_PUBLIC_TRANSPORT_SERVICE_URL=http://localhost:8010
+      - NEXT_PUBLIC_COMMUNICATION_SERVICE_URL=http://localhost:8011
+      - NEXT_PUBLIC_ANALYTICS_SERVICE_URL=http://localhost:8012
+      - NEXT_PUBLIC_NOTIFICATION_SERVICE_URL=http://localhost:8013
+      - NEXT_PUBLIC_CONFIG_SERVICE_URL=http://localhost:8014
+      - NEXT_PUBLIC_SUPER_ADMIN_SERVICE_URL=http://localhost:8015
+      - NEXT_PUBLIC_AI_SERVICE_URL=http://localhost:8016
+      - NEXT_PUBLIC_AI_ANALYTICS_SERVICE_URL=http://localhost:8017
+    depends_on:
+      - api-gateway
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Infrastructure Services
+  postgres:
+    image: postgres:15
+    container_name: ai-schoolos-postgres
+    environment:
+      POSTGRES_DB: schoolos
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    ports:
+      - "5432:5432"
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d schoolos"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  redis:
+    image: redis:7-alpine
+    container_name: ai-schoolos-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongodb:
+    image: mongo:6
+    container_name: ai-schoolos-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: schoolos
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    container_name: ai-schoolos-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./backend
+      dockerfile: api-gateway/Dockerfile
+    container_name: ai-schoolos-api-gateway
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - MINIO_ENDPOINT=minio:9000
+      - LOG_LEVEL=INFO
+      - STUDENT_SERVICE_URL=http://ai-schoolos-student-service:8002
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Auth Service
+  auth-service:
+    build:
+      context: ./backend
+      dockerfile: services/auth-service/Dockerfile
+    container_name: ai-schoolos-auth-service
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+      - LOG_LEVEL=INFO
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Student Service
+  student-service:
+    build:
+      context: ./backend
+      dockerfile: services/student-service/Dockerfile
+    container_name: ai-schoolos-student-service
+    ports:
+      - "8002:8002"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Staff Service
+  staff-service:
+    build:
+      context: ./backend
+      dockerfile: services/staff-service/Dockerfile
+    container_name: ai-schoolos-staff-service
+    ports:
+      - "8003:8003"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Fee Service
+  fee-service:
+    build:
+      context: ./backend
+      dockerfile: services/fee-service/Dockerfile
+    container_name: ai-schoolos-fee-service
+    ports:
+      - "8004:8004"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8004/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Exam Service
+  exam-service:
+    build:
+      context: ./backend
+      dockerfile: services/exam-service/Dockerfile
+    container_name: ai-schoolos-exam-service
+    ports:
+      - "8005:8005"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8005/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Attendance Service
+  attendance-service:
+    build:
+      context: ./backend
+      dockerfile: services/attendance-service/Dockerfile
+    container_name: ai-schoolos-attendance-service
+    ports:
+      - "8006:8006"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8006/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Homework Service
+  homework-service:
+    build:
+      context: ./backend
+      dockerfile: services/homework-service/Dockerfile
+    container_name: ai-schoolos-homework-service
+    ports:
+      - "8007:8007"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8007/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Timetable Service
+  timetable-service:
+    build:
+      context: ./backend
+      dockerfile: services/timetable-service/Dockerfile
+    container_name: ai-schoolos-timetable-service
+    ports:
+      - "8008:8008"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8008/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Library Service
+  library-service:
+    build:
+      context: ./backend
+      dockerfile: services/library-service/Dockerfile
+    container_name: ai-schoolos-library-service
+    ports:
+      - "8009:8009"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8009/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Transport Service
+  transport-service:
+    build:
+      context: ./backend
+      dockerfile: services/transport-service/Dockerfile
+    container_name: ai-schoolos-transport-service
+    ports:
+      - "8010:8010"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8010/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Communication Service
+  communication-service:
+    build:
+      context: ./backend
+      dockerfile: services/communication-service/Dockerfile
+    container_name: ai-schoolos-communication-service
+    ports:
+      - "8011:8011"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8011/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Analytics Service
+  analytics-service:
+    build:
+      context: ./backend
+      dockerfile: services/analytics-service/Dockerfile
+    container_name: ai-schoolos-analytics-service
+    ports:
+      - "8012:8012"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8012/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Notification Service
+  notification-service:
+    build:
+      context: ./backend
+      dockerfile: services/notification-service/Dockerfile
+    container_name: ai-schoolos-notification-service
+    ports:
+      - "8013:8013"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8013/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Config Service
+  config-service:
+    build:
+      context: ./backend
+      dockerfile: services/config-service/Dockerfile
+    container_name: ai-schoolos-config-service
+    ports:
+      - "8014:8014"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8014/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Super Admin Service
+  super-admin-service:
+    build:
+      context: ./backend
+      dockerfile: services/super-admin-service/Dockerfile
+    container_name: ai-schoolos-super-admin-service
+    ports:
+      - "8015:8015"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8015/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # AI Service
+  ai-service:
+    build:
+      context: ./backend
+      dockerfile: services/ai-service/Dockerfile
+    container_name: ai-schoolos-ai-service
+    ports:
+      - "8016:8016"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8016/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # AI Analytics Service
+  ai-analytics-service:
+    build:
+      context: ./backend
+      dockerfile: services/ai-analytics-service/Dockerfile
+    container_name: ai-schoolos-ai-analytics-service
+    ports:
+      - "8017:8017"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/schoolos
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://admin:admin@mongodb:27017
+      - LOG_LEVEL=INFO
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ai-schoolos-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8017/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  mongodb_data:
+    driver: local
+  minio_data:
+    driver: local
+
+networks:
+  ai-schoolos-network:
+    driver: bridge 

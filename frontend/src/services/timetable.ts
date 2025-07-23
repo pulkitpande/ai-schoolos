@@ -1,0 +1,355 @@
+import { apiService, ApiResponse } from './api';
+
+// Timetable Types
+export interface Timetable {
+  id: string;
+  name: string;
+  description: string;
+  classId: string;
+  academicYear: string;
+  semester?: string;
+  isActive: boolean;
+  schoolId: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TimetableSlot {
+  id: string;
+  timetableId: string;
+  dayOfWeek: number; // 1-7 (Monday-Sunday)
+  startTime: string;
+  endTime: string;
+  subjectId: string;
+  teacherId: string;
+  roomId?: string;
+  slotType: 'lecture' | 'lab' | 'break' | 'lunch' | 'assembly';
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Room {
+  id: string;
+  name: string;
+  roomNumber: string;
+  capacity: number;
+  roomType: 'classroom' | 'laboratory' | 'auditorium' | 'library' | 'office';
+  building: string;
+  floor: string;
+  isActive: boolean;
+  schoolId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Schedule {
+  id: string;
+  timetableId: string;
+  classId: string;
+  subjectId: string;
+  teacherId: string;
+  roomId?: string;
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+  date?: string; // For specific dates
+  isRecurring: boolean;
+  status: 'scheduled' | 'cancelled' | 'rescheduled';
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TimetableFilters {
+  classId?: string;
+  teacherId?: string;
+  subjectId?: string;
+  dayOfWeek?: number;
+  schoolId?: string;
+  isActive?: boolean;
+}
+
+export interface TimetableListResponse {
+  timetables: Timetable[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+// Timetable Service class
+export class TimetableService {
+  private readonly TIMETABLE_ENDPOINTS = {
+    TIMETABLES: '/api/v1/timetables',
+    SLOTS: '/api/v1/timetables/slots',
+    ROOMS: '/api/v1/timetables/rooms',
+    SCHEDULES: '/api/v1/timetables/schedules',
+    CLASS_TIMETABLE: '/api/v1/timetables/classes',
+    TEACHER_TIMETABLE: '/api/v1/timetables/teachers',
+    CONFLICTS: '/api/v1/timetables/conflicts',
+  };
+
+  // Get timetables
+  async getTimetables(filters?: TimetableFilters): Promise<TimetableListResponse> {
+    const response = await apiService.get<TimetableListResponse>(this.TIMETABLE_ENDPOINTS.TIMETABLES, filters);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to fetch timetables');
+  }
+
+  // Get timetable by ID
+  async getTimetable(id: string): Promise<Timetable> {
+    const response = await apiService.get<Timetable>(`${this.TIMETABLE_ENDPOINTS.TIMETABLES}/${id}`);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to fetch timetable');
+  }
+
+  // Create timetable
+  async createTimetable(data: Partial<Timetable>): Promise<Timetable> {
+    const response = await apiService.post<Timetable>(this.TIMETABLE_ENDPOINTS.TIMETABLES, data);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to create timetable');
+  }
+
+  // Update timetable
+  async updateTimetable(id: string, data: Partial<Timetable>): Promise<Timetable> {
+    const response = await apiService.put<Timetable>(`${this.TIMETABLE_ENDPOINTS.TIMETABLES}/${id}`, data);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to update timetable');
+  }
+
+  // Delete timetable
+  async deleteTimetable(id: string): Promise<void> {
+    const response = await apiService.delete(`${this.TIMETABLE_ENDPOINTS.TIMETABLES}/${id}`);
+    
+    if (!response.success) {
+      throw new Error(response.message || 'Failed to delete timetable');
+    }
+  }
+
+  // Get timetable slots
+  async getTimetableSlots(timetableId: string): Promise<TimetableSlot[]> {
+    const response = await apiService.get<TimetableSlot[]>(`${this.TIMETABLE_ENDPOINTS.SLOTS}`, { timetableId });
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to fetch timetable slots');
+  }
+
+  // Get timetable slot by ID
+  async getTimetableSlot(id: string): Promise<TimetableSlot> {
+    const response = await apiService.get<TimetableSlot>(`${this.TIMETABLE_ENDPOINTS.SLOTS}/${id}`);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to fetch timetable slot');
+  }
+
+  // Create timetable slot
+  async createTimetableSlot(data: Partial<TimetableSlot>): Promise<TimetableSlot> {
+    const response = await apiService.post<TimetableSlot>(this.TIMETABLE_ENDPOINTS.SLOTS, data);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to create timetable slot');
+  }
+
+  // Update timetable slot
+  async updateTimetableSlot(id: string, data: Partial<TimetableSlot>): Promise<TimetableSlot> {
+    const response = await apiService.put<TimetableSlot>(`${this.TIMETABLE_ENDPOINTS.SLOTS}/${id}`, data);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to update timetable slot');
+  }
+
+  // Delete timetable slot
+  async deleteTimetableSlot(id: string): Promise<void> {
+    const response = await apiService.delete(`${this.TIMETABLE_ENDPOINTS.SLOTS}/${id}`);
+    
+    if (!response.success) {
+      throw new Error(response.message || 'Failed to delete timetable slot');
+    }
+  }
+
+  // Get rooms
+  async getRooms(schoolId?: string): Promise<Room[]> {
+    const params = schoolId ? { schoolId } : {};
+    const response = await apiService.get<Room[]>(this.TIMETABLE_ENDPOINTS.ROOMS, params);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to fetch rooms');
+  }
+
+  // Get room by ID
+  async getRoom(id: string): Promise<Room> {
+    const response = await apiService.get<Room>(`${this.TIMETABLE_ENDPOINTS.ROOMS}/${id}`);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to fetch room');
+  }
+
+  // Create room
+  async createRoom(data: Partial<Room>): Promise<Room> {
+    const response = await apiService.post<Room>(this.TIMETABLE_ENDPOINTS.ROOMS, data);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to create room');
+  }
+
+  // Update room
+  async updateRoom(id: string, data: Partial<Room>): Promise<Room> {
+    const response = await apiService.put<Room>(`${this.TIMETABLE_ENDPOINTS.ROOMS}/${id}`, data);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to update room');
+  }
+
+  // Delete room
+  async deleteRoom(id: string): Promise<void> {
+    const response = await apiService.delete(`${this.TIMETABLE_ENDPOINTS.ROOMS}/${id}`);
+    
+    if (!response.success) {
+      throw new Error(response.message || 'Failed to delete room');
+    }
+  }
+
+  // Get schedules
+  async getSchedules(filters?: any): Promise<Schedule[]> {
+    const response = await apiService.get<Schedule[]>(this.TIMETABLE_ENDPOINTS.SCHEDULES, filters);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to fetch schedules');
+  }
+
+  // Get schedule by ID
+  async getSchedule(id: string): Promise<Schedule> {
+    const response = await apiService.get<Schedule>(`${this.TIMETABLE_ENDPOINTS.SCHEDULES}/${id}`);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to fetch schedule');
+  }
+
+  // Create schedule
+  async createSchedule(data: Partial<Schedule>): Promise<Schedule> {
+    const response = await apiService.post<Schedule>(this.TIMETABLE_ENDPOINTS.SCHEDULES, data);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to create schedule');
+  }
+
+  // Update schedule
+  async updateSchedule(id: string, data: Partial<Schedule>): Promise<Schedule> {
+    const response = await apiService.put<Schedule>(`${this.TIMETABLE_ENDPOINTS.SCHEDULES}/${id}`, data);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to update schedule');
+  }
+
+  // Delete schedule
+  async deleteSchedule(id: string): Promise<void> {
+    const response = await apiService.delete(`${this.TIMETABLE_ENDPOINTS.SCHEDULES}/${id}`);
+    
+    if (!response.success) {
+      throw new Error(response.message || 'Failed to delete schedule');
+    }
+  }
+
+  // Get class timetable
+  async getClassTimetable(classId: string): Promise<TimetableSlot[]> {
+    const response = await apiService.get<TimetableSlot[]>(`${this.TIMETABLE_ENDPOINTS.CLASS_TIMETABLE}/${classId}`);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to fetch class timetable');
+  }
+
+  // Get teacher timetable
+  async getTeacherTimetable(teacherId: string): Promise<TimetableSlot[]> {
+    const response = await apiService.get<TimetableSlot[]>(`${this.TIMETABLE_ENDPOINTS.TEACHER_TIMETABLE}/${teacherId}`);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to fetch teacher timetable');
+  }
+
+  // Check for conflicts
+  async checkConflicts(data: { teacherId?: string; roomId?: string; dayOfWeek: number; startTime: string; endTime: string; excludeId?: string }): Promise<any> {
+    const response = await apiService.post<any>(this.TIMETABLE_ENDPOINTS.CONFLICTS, data);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to check conflicts');
+  }
+
+  // Get timetable statistics
+  async getTimetableStats(schoolId?: string): Promise<any> {
+    const params = schoolId ? { schoolId } : {};
+    const response = await apiService.get<any>(`${this.TIMETABLE_ENDPOINTS.TIMETABLES}/stats`, params);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to fetch timetable statistics');
+  }
+}
+
+// Export singleton instance
+export const timetableService = new TimetableService();
+export default timetableService; 

@@ -1,0 +1,27 @@
+{
+  "name": "ai-schoolos",
+  "version": "1.0.0",
+  "description": "AI SchoolOS - Complete School Management System",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev:backend && npm run dev:frontend",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "docker-compose up -d",
+    "dev:concurrent": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "build": "cd frontend && npm run build",
+    "start": "cd frontend && npm start",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:build": "docker-compose build",
+    "docker:logs": "docker-compose logs -f",
+    "install:all": "npm install && cd frontend && npm install",
+    "clean": "docker-compose down -v && rm -rf frontend/.next frontend/node_modules",
+    "test": "cd frontend && npm run test",
+    "lint": "cd frontend && npm run lint",
+    "type-check": "cd frontend && npm run type-check",
+    "setup": "npm install && cd frontend && npm install && npm run docker:build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+} 
