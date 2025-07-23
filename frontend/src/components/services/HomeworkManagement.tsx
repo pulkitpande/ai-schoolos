@@ -209,23 +209,21 @@ export default function HomeworkManagement({ schoolId }: HomeworkManagementProps
                             {assignment.subject}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {new Date(assignment.due_date || '').toLocaleDateString()}
+                            {new Date(assignment.dueDate || '').toLocaleDateString()}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span
                               className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                assignment.status === 'active'
+                                assignment.isActive
                                   ? 'bg-green-100 text-green-800'
-                                  : assignment.status === 'completed'
-                                  ? 'bg-blue-100 text-blue-800'
                                   : 'bg-gray-100 text-gray-800'
                               }`}
                             >
-                              {assignment.status}
+                              {assignment.isActive ? 'Active' : 'Inactive'}
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {assignment.submissions_count || 0} / {assignment.total_students || 0}
+                            {assignment.totalMarks || 0} marks
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div className="flex gap-2">
