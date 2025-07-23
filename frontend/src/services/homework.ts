@@ -81,7 +81,7 @@ export class HomeworkService {
   };
 
   // Get homework assignments
-  async getHomework(filters?: HomeworkFilters): Promise<HomeworkListResponse> {
+  async getHomeworkAssignments(filters?: HomeworkFilters): Promise<HomeworkListResponse> {
     const params = new URLSearchParams();
     
     if (filters) {
@@ -103,8 +103,8 @@ export class HomeworkService {
     throw new Error(response.message || 'Failed to fetch homework assignments');
   }
 
-  // Get homework by ID
-  async getHomeworkById(id: string): Promise<Homework> {
+  // Get homework assignment by ID
+  async getHomeworkAssignment(id: string): Promise<Homework> {
     const response = await apiService.get<Homework>(`${this.HOMEWORK_ENDPOINTS.HOMEWORK}/${id}`);
     
     if (response.success && response.data) {
@@ -115,7 +115,7 @@ export class HomeworkService {
   }
 
   // Create homework assignment
-  async createHomework(data: Partial<Homework>): Promise<Homework> {
+  async createHomeworkAssignment(data: Partial<Homework>): Promise<Homework> {
     const response = await apiService.post<Homework>(this.HOMEWORK_ENDPOINTS.HOMEWORK, data);
     
     if (response.success && response.data) {
@@ -126,7 +126,7 @@ export class HomeworkService {
   }
 
   // Update homework assignment
-  async updateHomework(id: string, data: Partial<Homework>): Promise<Homework> {
+  async updateHomeworkAssignment(id: string, data: Partial<Homework>): Promise<Homework> {
     const response = await apiService.put<Homework>(`${this.HOMEWORK_ENDPOINTS.HOMEWORK}/${id}`, data);
     
     if (response.success && response.data) {
@@ -137,7 +137,7 @@ export class HomeworkService {
   }
 
   // Delete homework assignment
-  async deleteHomework(id: string): Promise<void> {
+  async deleteHomeworkAssignment(id: string): Promise<void> {
     const response = await apiService.delete(`${this.HOMEWORK_ENDPOINTS.HOMEWORK}/${id}`);
     
     if (!response.success) {

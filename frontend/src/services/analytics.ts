@@ -110,18 +110,22 @@ export class AnalyticsService {
   };
 
   // Get analytics data
-  async getAnalyticsData(filters?: AnalyticsFilters): Promise<AnalyticsListResponse> {
+  async getAnalyticsData(schoolId?: string, dateFrom?: string, dateTo?: string): Promise<any> {
     const params = new URLSearchParams();
     
-    if (filters) {
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          params.append(key, value.toString());
-        }
-      });
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+    
+    if (dateFrom) {
+      params.append('dateFrom', dateFrom);
+    }
+    
+    if (dateTo) {
+      params.append('dateTo', dateTo);
     }
 
-    const response = await apiService.get<AnalyticsListResponse>(
+    const response = await apiService.get<any>(
       `${this.ANALYTICS_ENDPOINTS.ANALYTICS}?${params.toString()}`
     );
     

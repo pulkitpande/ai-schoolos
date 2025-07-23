@@ -86,9 +86,10 @@ export class TimetableService {
     SLOTS: '/api/v1/timetables/slots',
     ROOMS: '/api/v1/timetables/rooms',
     SCHEDULES: '/api/v1/timetables/schedules',
-    CLASS_TIMETABLE: '/api/v1/timetables/classes',
-    TEACHER_TIMETABLE: '/api/v1/timetables/teachers',
+    CLASS_TIMETABLES: '/api/v1/timetables/classes',
+    TEACHER_TIMETABLES: '/api/v1/timetables/teachers',
     CONFLICTS: '/api/v1/timetables/conflicts',
+    REPORTS: '/api/v1/timetables/reports',
   };
 
   // Get timetables
@@ -157,9 +158,16 @@ export class TimetableService {
   }
 
   // Get timetable slots
-  async getTimetableSlots(timetableId: string): Promise<TimetableSlot[]> {
+  async getTimetableSlots(filters?: any): Promise<TimetableSlot[]> {
     const params = new URLSearchParams();
-    params.append('timetableId', timetableId);
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
 
     const response = await apiService.get<TimetableSlot[]>(
       `${this.TIMETABLE_ENDPOINTS.SLOTS}?${params.toString()}`
@@ -348,37 +356,53 @@ export class TimetableService {
     }
   }
 
-  // Get class timetable
-  async getClassTimetable(classId: string): Promise<TimetableSlot[]> {
-    const response = await apiService.get<TimetableSlot[]>(`${this.TIMETABLE_ENDPOINTS.CLASS_TIMETABLE}/${classId}`);
+  // Get class timetables
+  async getClassTimetables(classId: string): Promise<Timetable[]> {
+    const response = await apiService.get<Timetable[]>(`${this.TIMETABLE_ENDPOINTS.CLASS_TIMETABLES}/${classId}/timetables`);
     
     if (response.success && response.data) {
       return response.data;
     }
     
-    throw new Error(response.message || 'Failed to fetch class timetable');
+    throw new Error(response.message || 'Failed to fetch class timetables');
   }
 
-  // Get teacher timetable
-  async getTeacherTimetable(teacherId: string): Promise<TimetableSlot[]> {
-    const response = await apiService.get<TimetableSlot[]>(`${this.TIMETABLE_ENDPOINTS.TEACHER_TIMETABLE}/${teacherId}`);
+  // Get teacher timetables
+  async getTeacherTimetables(teacherId: string): Promise<Timetable[]> {
+    const response = await apiService.get<Timetable[]>(`${this.TIMETABLE_ENDPOINTS.TEACHER_TIMETABLES}/${teacherId}/timetables`);
     
     if (response.success && response.data) {
       return response.data;
     }
     
-    throw new Error(response.message || 'Failed to fetch teacher timetable');
+    throw new Error(response.message || 'Failed to fetch teacher timetables');
   }
 
-  // Check for conflicts
-  async checkConflicts(data: { teacherId?: string; roomId?: string; dayOfWeek: number; startTime: string; endTime: string; excludeId?: string }): Promise<any> {
-    const response = await apiService.post<any>(this.TIMETABLE_ENDPOINTS.CONFLICTS, data);
+  // Get timetable reports
+  async getTimetableReports(schoolId?: string, dateFrom?: string, dateTo?: string): Promise<any> {
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+    
+    if (dateFrom) {
+      params.append('dateFrom', dateFrom);
+    }
+    
+    if (dateTo) {
+      params.append('dateTo', dateTo);
+    }
+
+    const response = await apiService.get<any>(
+      `${this.TIMETABLE_ENDPOINTS.REPORTS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
     }
     
-    throw new Error(response.message || 'Failed to check conflicts');
+    throw new Error(response.message || 'Failed to fetch timetable reports');
   }
 
   // Get timetable stats
@@ -390,7 +414,7 @@ export class TimetableService {
     }
 
     const response = await apiService.get<any>(
-      `${this.TIMETABLE_ENDPOINTS.TIMETABLES}/stats?${params.toString()}`
+      `${this.TIMETABLE_ENDPOINTS.REPORTS}/stats?${params.toString()}`
     );
     
     if (response.success && response.data) {
