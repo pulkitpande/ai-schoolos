@@ -37,6 +37,7 @@ services:
     environment:
       - PYTHONPATH=/app
       - ENVIRONMENT=development
+      - DATABASE_URL=sqlite:///./schoolos.db
     volumes:
       - ./backend/api-gateway:/app/api-gateway
       - ./backend/shared:/app/shared
@@ -65,6 +66,7 @@ services:
       - ENVIRONMENT=development
       - SERVICE_NAME=auth-service
       - SERVICE_PORT=8001
+      - DATABASE_URL=sqlite:///./auth_service.db
     volumes:
       - ./backend/services/auth-service:/app/services/auth-service
       - ./backend/shared:/app/shared
@@ -93,6 +95,7 @@ services:
       - ENVIRONMENT=development
       - SERVICE_NAME=student-service
       - SERVICE_PORT=8002
+      - DATABASE_URL=sqlite:///./student_service.db
     volumes:
       - ./backend/services/student-service:/app/services/student-service
       - ./backend/shared:/app/shared
