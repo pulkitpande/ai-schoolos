@@ -111,7 +111,19 @@ export class AnalyticsService {
 
   // Get analytics data
   async getAnalyticsData(filters?: AnalyticsFilters): Promise<AnalyticsListResponse> {
-    const response = await apiService.get<AnalyticsListResponse>(this.ANALYTICS_ENDPOINTS.ANALYTICS, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<AnalyticsListResponse>(
+      `${this.ANALYTICS_ENDPOINTS.ANALYTICS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -164,8 +176,15 @@ export class AnalyticsService {
 
   // Get dashboards
   async getDashboards(schoolId?: string): Promise<Dashboard[]> {
-    const params = schoolId ? { schoolId } : {};
-    const response = await apiService.get<Dashboard[]>(this.ANALYTICS_ENDPOINTS.DASHBOARDS, params);
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+
+    const response = await apiService.get<Dashboard[]>(
+      `${this.ANALYTICS_ENDPOINTS.DASHBOARDS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -260,7 +279,19 @@ export class AnalyticsService {
 
   // Get reports
   async getReports(filters?: any): Promise<Report[]> {
-    const response = await apiService.get<Report[]>(this.ANALYTICS_ENDPOINTS.REPORTS, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<Report[]>(
+      `${this.ANALYTICS_ENDPOINTS.REPORTS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -313,7 +344,7 @@ export class AnalyticsService {
 
   // Generate report
   async generateReport(id: string): Promise<Report> {
-    const response = await apiService.post<Report>(`${this.ANALYTICS_ENDPOINTS.REPORTS}/${id}/generate`, {});
+    const response = await apiService.post<Report>(`${this.ANALYTICS_ENDPOINTS.REPORTS}/${id}/generate`);
     
     if (response.success && response.data) {
       return response.data;
@@ -324,8 +355,23 @@ export class AnalyticsService {
 
   // Get performance metrics
   async getPerformanceMetrics(studentId?: string, filters?: any): Promise<PerformanceMetric[]> {
-    const params = { ...filters, studentId };
-    const response = await apiService.get<PerformanceMetric[]>(this.ANALYTICS_ENDPOINTS.METRICS, params);
+    const params = new URLSearchParams();
+    
+    if (studentId) {
+      params.append('studentId', studentId);
+    }
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<PerformanceMetric[]>(
+      `${this.ANALYTICS_ENDPOINTS.METRICS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -378,8 +424,23 @@ export class AnalyticsService {
 
   // Get insights
   async getInsights(schoolId?: string, filters?: any): Promise<any> {
-    const params = { ...filters, schoolId };
-    const response = await apiService.get<any>(this.ANALYTICS_ENDPOINTS.INSIGHTS, params);
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<any>(
+      `${this.ANALYTICS_ENDPOINTS.INSIGHTS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -390,8 +451,15 @@ export class AnalyticsService {
 
   // Get analytics summary
   async getAnalyticsSummary(schoolId?: string): Promise<any> {
-    const params = schoolId ? { schoolId } : {};
-    const response = await apiService.get<any>(`${this.ANALYTICS_ENDPOINTS.ANALYTICS}/summary`, params);
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+
+    const response = await apiService.get<any>(
+      `${this.ANALYTICS_ENDPOINTS.ANALYTICS}/summary?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -402,8 +470,21 @@ export class AnalyticsService {
 
   // Export analytics data
   async exportAnalyticsData(format: 'csv' | 'excel' | 'pdf', filters?: any): Promise<any> {
-    const params = { ...filters, format };
-    const response = await apiService.get<any>(this.ANALYTICS_ENDPOINTS.EXPORTS, params);
+    const params = new URLSearchParams();
+    
+    params.append('format', format);
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<any>(
+      `${this.ANALYTICS_ENDPOINTS.EXPORTS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -414,8 +495,15 @@ export class AnalyticsService {
 
   // Get real-time analytics
   async getRealTimeAnalytics(schoolId?: string): Promise<any> {
-    const params = schoolId ? { schoolId } : {};
-    const response = await apiService.get<any>(`${this.ANALYTICS_ENDPOINTS.ANALYTICS}/realtime`, params);
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+
+    const response = await apiService.get<any>(
+      `${this.ANALYTICS_ENDPOINTS.ANALYTICS}/realtime?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
