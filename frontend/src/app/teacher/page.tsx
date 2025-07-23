@@ -427,7 +427,7 @@ export default function TeacherPortal() {
                       {studentsLoading ? (
                         <div className="text-center text-gray-500">Loading classes...</div>
                       ) : studentsError ? (
-                        <div className="text-center text-red-500">{studentsError.message || 'Failed to load classes'}</div>
+                        <div className="text-center text-red-500">{(studentsError as any)?.message || 'Failed to load classes'}</div>
                       ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                           {(studentsData?.students || []).map((student: any, index: number) => (
@@ -470,7 +470,7 @@ export default function TeacherPortal() {
                       {studentsLoading ? (
                         <div className="text-center text-gray-500">Loading students...</div>
                       ) : studentsError ? (
-                        <div className="text-center text-red-500">{studentsError.message || 'Failed to load students'}</div>
+                        <div className="text-center text-red-500">{(studentsError as any)?.message || 'Failed to load students'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
@@ -538,7 +538,7 @@ export default function TeacherPortal() {
                       {homeworkLoading ? (
                         <div className="text-center text-gray-500">Loading assignments...</div>
                       ) : homeworkError ? (
-                        <div className="text-center text-red-500">{homeworkError.message || 'Failed to load assignments'}</div>
+                        <div className="text-center text-red-500">{(homeworkError as any)?.message || 'Failed to load assignments'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
@@ -611,7 +611,7 @@ export default function TeacherPortal() {
                       {attendanceLoading ? (
                         <div className="text-center text-gray-500">Loading attendance...</div>
                       ) : attendanceError ? (
-                        <div className="text-center text-red-500">{attendanceError.message || 'Failed to load attendance'}</div>
+                        <div className="text-center text-red-500">{(attendanceError as any)?.message || 'Failed to load attendance'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
@@ -669,7 +669,7 @@ export default function TeacherPortal() {
                       {messageLoading ? (
                         <div className="text-center text-gray-500">Loading messages...</div>
                       ) : messageError ? (
-                        <div className="text-center text-red-500">{messageError.message || 'Failed to load messages'}</div>
+                        <div className="text-center text-red-500">{(messageError as any)?.message || 'Failed to load messages'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
