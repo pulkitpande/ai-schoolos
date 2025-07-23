@@ -201,21 +201,21 @@ export default function AttendanceManagement({ schoolId }: AttendanceManagementP
                               <div className="flex-shrink-0 h-10 w-10">
                                 <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
                                   <span className="text-sm font-medium text-blue-600">
-                                    {record.student_name?.charAt(0)}
+                                    {record.studentId?.charAt(0)}
                                   </span>
                                 </div>
                               </div>
                               <div className="ml-4">
-                                <div className="text-sm font-medium text-gray-900">{record.student_name}</div>
-                                <div className="text-sm text-gray-500">{record.student_id}</div>
+                                <div className="text-sm font-medium text-gray-900">{record.studentId}</div>
+                                <div className="text-sm text-gray-500">{record.studentId}</div>
                               </div>
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {record.class_name}
+                            {record.classId}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {new Date(record.attendance_date || '').toLocaleDateString()}
+                            {new Date(record.date || '').toLocaleDateString()}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span
@@ -231,7 +231,7 @@ export default function AttendanceManagement({ schoolId }: AttendanceManagementP
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {record.check_in_time}
+                            {record.timeIn}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div className="flex gap-2">
