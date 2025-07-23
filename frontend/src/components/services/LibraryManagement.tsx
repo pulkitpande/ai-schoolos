@@ -217,18 +217,16 @@ export default function LibraryManagement({ schoolId }: LibraryManagementProps) 
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span
                               className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                book.status === 'available'
+                                book.availableCopies > 0
                                   ? 'bg-green-100 text-green-800'
-                                  : book.status === 'borrowed'
-                                  ? 'bg-orange-100 text-orange-800'
                                   : 'bg-red-100 text-red-800'
                               }`}
                             >
-                              {book.status}
+                              {book.availableCopies > 0 ? 'Available' : 'Unavailable'}
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {book.copies_available} / {book.total_copies}
+                            {book.availableCopies} / {book.totalCopies}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div className="flex gap-2">
