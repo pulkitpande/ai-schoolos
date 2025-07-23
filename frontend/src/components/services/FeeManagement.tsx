@@ -198,18 +198,18 @@ export default function FeeManagement({ schoolId }: FeeManagementProps) {
                               <div className="flex-shrink-0 h-10 w-10">
                                 <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
                                   <span className="text-sm font-medium text-blue-600">
-                                    {payment.student_name?.charAt(0)}
+                                    {payment.studentId?.charAt(0)}
                                   </span>
                                 </div>
                               </div>
                               <div className="ml-4">
-                                <div className="text-sm font-medium text-gray-900">{payment.student_name}</div>
-                                <div className="text-sm text-gray-500">{payment.student_id}</div>
+                                <div className="text-sm font-medium text-gray-900">{payment.studentId}</div>
+                                <div className="text-sm text-gray-500">{payment.studentId}</div>
                               </div>
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {payment.fee_type}
+                            {payment.feeStructureId}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                             ₹{payment.amount?.toLocaleString()}
@@ -217,18 +217,18 @@ export default function FeeManagement({ schoolId }: FeeManagementProps) {
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span
                               className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                payment.status === 'paid'
+                                payment.paymentStatus === 'paid'
                                   ? 'bg-green-100 text-green-800'
-                                  : payment.status === 'pending'
+                                  : payment.paymentStatus === 'pending'
                                   ? 'bg-yellow-100 text-yellow-800'
                                   : 'bg-red-100 text-red-800'
                               }`}
                             >
-                              {payment.status}
+                              {payment.paymentStatus}
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {new Date(payment.payment_date || '').toLocaleDateString()}
+                            {new Date(payment.paidDate || '').toLocaleDateString()}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div className="flex gap-2">
