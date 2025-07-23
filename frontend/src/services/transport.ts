@@ -136,7 +136,19 @@ export class TransportService {
 
   // Get vehicles
   async getVehicles(filters?: TransportFilters): Promise<TransportListResponse> {
-    const response = await apiService.get<TransportListResponse>(this.TRANSPORT_ENDPOINTS.VEHICLES, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<TransportListResponse>(
+      `${this.TRANSPORT_ENDPOINTS.VEHICLES}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -189,7 +201,19 @@ export class TransportService {
 
   // Get routes
   async getRoutes(filters?: any): Promise<Route[]> {
-    const response = await apiService.get<Route[]>(this.TRANSPORT_ENDPOINTS.ROUTES, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<Route[]>(
+      `${this.TRANSPORT_ENDPOINTS.ROUTES}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -242,13 +266,29 @@ export class TransportService {
 
   // Get route stops
   async getRouteStops(routeId: string): Promise<RouteStop[]> {
-    const response = await apiService.get<RouteStop[]>(`${this.TRANSPORT_ENDPOINTS.STOPS}`, { routeId });
+    const params = new URLSearchParams();
+    params.append('routeId', routeId);
+
+    const response = await apiService.get<RouteStop[]>(
+      `${this.TRANSPORT_ENDPOINTS.STOPS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
     }
     
     throw new Error(response.message || 'Failed to fetch route stops');
+  }
+
+  // Get route stop by ID
+  async getRouteStop(id: string): Promise<RouteStop> {
+    const response = await apiService.get<RouteStop>(`${this.TRANSPORT_ENDPOINTS.STOPS}/${id}`);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to fetch route stop');
   }
 
   // Create route stop
@@ -284,7 +324,19 @@ export class TransportService {
 
   // Get transport bookings
   async getTransportBookings(filters?: any): Promise<TransportBooking[]> {
-    const response = await apiService.get<TransportBooking[]>(this.TRANSPORT_ENDPOINTS.BOOKINGS, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<TransportBooking[]>(
+      `${this.TRANSPORT_ENDPOINTS.BOOKINGS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -337,7 +389,19 @@ export class TransportService {
 
   // Get drivers
   async getDrivers(filters?: any): Promise<Driver[]> {
-    const response = await apiService.get<Driver[]>(this.TRANSPORT_ENDPOINTS.DRIVERS, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<Driver[]>(
+      `${this.TRANSPORT_ENDPOINTS.DRIVERS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -390,7 +454,19 @@ export class TransportService {
 
   // Get conductors
   async getConductors(filters?: any): Promise<Conductor[]> {
-    const response = await apiService.get<Conductor[]>(this.TRANSPORT_ENDPOINTS.CONDUCTORS, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<Conductor[]>(
+      `${this.TRANSPORT_ENDPOINTS.CONDUCTORS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -454,8 +530,23 @@ export class TransportService {
 
   // Get transport reports
   async getTransportReports(schoolId?: string, dateFrom?: string, dateTo?: string): Promise<any> {
-    const params = { schoolId, dateFrom, dateTo };
-    const response = await apiService.get<any>(this.TRANSPORT_ENDPOINTS.REPORTS, params);
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+    
+    if (dateFrom) {
+      params.append('dateFrom', dateFrom);
+    }
+    
+    if (dateTo) {
+      params.append('dateTo', dateTo);
+    }
+
+    const response = await apiService.get<any>(
+      `${this.TRANSPORT_ENDPOINTS.REPORTS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -464,16 +555,23 @@ export class TransportService {
     throw new Error(response.message || 'Failed to fetch transport reports');
   }
 
-  // Get transport statistics
+  // Get transport stats
   async getTransportStats(schoolId?: string): Promise<any> {
-    const params = schoolId ? { schoolId } : {};
-    const response = await apiService.get<any>(`${this.TRANSPORT_ENDPOINTS.REPORTS}/stats`, params);
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+
+    const response = await apiService.get<any>(
+      `${this.TRANSPORT_ENDPOINTS.REPORTS}/stats?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
     }
     
-    throw new Error(response.message || 'Failed to fetch transport statistics');
+    throw new Error(response.message || 'Failed to fetch transport stats');
   }
 }
 

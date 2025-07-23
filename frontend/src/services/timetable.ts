@@ -93,7 +93,19 @@ export class TimetableService {
 
   // Get timetables
   async getTimetables(filters?: TimetableFilters): Promise<TimetableListResponse> {
-    const response = await apiService.get<TimetableListResponse>(this.TIMETABLE_ENDPOINTS.TIMETABLES, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<TimetableListResponse>(
+      `${this.TIMETABLE_ENDPOINTS.TIMETABLES}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -146,7 +158,12 @@ export class TimetableService {
 
   // Get timetable slots
   async getTimetableSlots(timetableId: string): Promise<TimetableSlot[]> {
-    const response = await apiService.get<TimetableSlot[]>(`${this.TIMETABLE_ENDPOINTS.SLOTS}`, { timetableId });
+    const params = new URLSearchParams();
+    params.append('timetableId', timetableId);
+
+    const response = await apiService.get<TimetableSlot[]>(
+      `${this.TIMETABLE_ENDPOINTS.SLOTS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -198,9 +215,24 @@ export class TimetableService {
   }
 
   // Get rooms
-  async getRooms(schoolId?: string): Promise<Room[]> {
-    const params = schoolId ? { schoolId } : {};
-    const response = await apiService.get<Room[]>(this.TIMETABLE_ENDPOINTS.ROOMS, params);
+  async getRooms(schoolId?: string, filters?: any): Promise<Room[]> {
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<Room[]>(
+      `${this.TIMETABLE_ENDPOINTS.ROOMS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -253,7 +285,19 @@ export class TimetableService {
 
   // Get schedules
   async getSchedules(filters?: any): Promise<Schedule[]> {
-    const response = await apiService.get<Schedule[]>(this.TIMETABLE_ENDPOINTS.SCHEDULES, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<Schedule[]>(
+      `${this.TIMETABLE_ENDPOINTS.SCHEDULES}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -337,16 +381,23 @@ export class TimetableService {
     throw new Error(response.message || 'Failed to check conflicts');
   }
 
-  // Get timetable statistics
+  // Get timetable stats
   async getTimetableStats(schoolId?: string): Promise<any> {
-    const params = schoolId ? { schoolId } : {};
-    const response = await apiService.get<any>(`${this.TIMETABLE_ENDPOINTS.TIMETABLES}/stats`, params);
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+
+    const response = await apiService.get<any>(
+      `${this.TIMETABLE_ENDPOINTS.TIMETABLES}/stats?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
     }
     
-    throw new Error(response.message || 'Failed to fetch timetable statistics');
+    throw new Error(response.message || 'Failed to fetch timetable stats');
   }
 }
 

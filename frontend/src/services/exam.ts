@@ -100,7 +100,19 @@ export class ExamService {
 
   // Get exams
   async getExams(filters?: ExamFilters): Promise<ExamListResponse> {
-    const response = await apiService.get<ExamListResponse>(this.EXAM_ENDPOINTS.EXAMS, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<ExamListResponse>(
+      `${this.EXAM_ENDPOINTS.EXAMS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -153,8 +165,23 @@ export class ExamService {
 
   // Get exam results
   async getExamResults(examId?: string, filters?: any): Promise<ExamResult[]> {
-    const params = { ...filters, examId };
-    const response = await apiService.get<ExamResult[]>(this.EXAM_ENDPOINTS.RESULTS, params);
+    const params = new URLSearchParams();
+    
+    if (examId) {
+      params.append('examId', examId);
+    }
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<ExamResult[]>(
+      `${this.EXAM_ENDPOINTS.RESULTS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -207,13 +234,36 @@ export class ExamService {
 
   // Get exam schedules
   async getExamSchedules(filters?: any): Promise<ExamSchedule[]> {
-    const response = await apiService.get<ExamSchedule[]>(this.EXAM_ENDPOINTS.SCHEDULES, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<ExamSchedule[]>(
+      `${this.EXAM_ENDPOINTS.SCHEDULES}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
     }
     
     throw new Error(response.message || 'Failed to fetch exam schedules');
+  }
+
+  // Get exam schedule by ID
+  async getExamSchedule(id: string): Promise<ExamSchedule> {
+    const response = await apiService.get<ExamSchedule>(`${this.EXAM_ENDPOINTS.SCHEDULES}/${id}`);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to fetch exam schedule');
   }
 
   // Create exam schedule
@@ -249,8 +299,23 @@ export class ExamService {
 
   // Get grades
   async getGrades(studentId?: string, filters?: any): Promise<Grade[]> {
-    const params = { ...filters, studentId };
-    const response = await apiService.get<Grade[]>(this.EXAM_ENDPOINTS.GRADES, params);
+    const params = new URLSearchParams();
+    
+    if (studentId) {
+      params.append('studentId', studentId);
+    }
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<Grade[]>(
+      `${this.EXAM_ENDPOINTS.GRADES}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -325,8 +390,23 @@ export class ExamService {
 
   // Get exam reports
   async getExamReports(schoolId?: string, dateFrom?: string, dateTo?: string): Promise<any> {
-    const params = { schoolId, dateFrom, dateTo };
-    const response = await apiService.get<any>(this.EXAM_ENDPOINTS.REPORTS, params);
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+    
+    if (dateFrom) {
+      params.append('dateFrom', dateFrom);
+    }
+    
+    if (dateTo) {
+      params.append('dateTo', dateTo);
+    }
+
+    const response = await apiService.get<any>(
+      `${this.EXAM_ENDPOINTS.REPORTS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -335,16 +415,23 @@ export class ExamService {
     throw new Error(response.message || 'Failed to fetch exam reports');
   }
 
-  // Get exam statistics
+  // Get exam stats
   async getExamStats(schoolId?: string): Promise<any> {
-    const params = schoolId ? { schoolId } : {};
-    const response = await apiService.get<any>(`${this.EXAM_ENDPOINTS.REPORTS}/stats`, params);
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+
+    const response = await apiService.get<any>(
+      `${this.EXAM_ENDPOINTS.REPORTS}/stats?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
     }
     
-    throw new Error(response.message || 'Failed to fetch exam statistics');
+    throw new Error(response.message || 'Failed to fetch exam stats');
   }
 }
 
