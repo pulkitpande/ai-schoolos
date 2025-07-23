@@ -392,7 +392,7 @@ export default function SuperAdminPortal() {
                       {studentsLoading ? (
                         <div className="text-center text-gray-500">Loading schools...</div>
                       ) : studentsError ? (
-                        <div className="text-center text-red-500">{studentsError.message || 'Failed to load schools'}</div>
+                        <div className="text-center text-red-500">{(studentsError as any)?.message || 'Failed to load schools'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
@@ -450,7 +450,7 @@ export default function SuperAdminPortal() {
                       {staffLoading ? (
                         <div className="text-center text-gray-500">Loading users...</div>
                       ) : staffError ? (
-                        <div className="text-center text-red-500">{staffError.message || 'Failed to load users'}</div>
+                        <div className="text-center text-red-500">{(staffError as any)?.message || 'Failed to load users'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
@@ -539,7 +539,7 @@ export default function SuperAdminPortal() {
                       {messageLoading ? (
                         <div className="text-center text-gray-500">Loading messages...</div>
                       ) : messageError ? (
-                        <div className="text-center text-red-500">{messageError.message || 'Failed to load messages'}</div>
+                        <div className="text-center text-red-500">{(messageError as any)?.message || 'Failed to load messages'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
