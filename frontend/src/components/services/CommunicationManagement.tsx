@@ -190,7 +190,7 @@ export default function CommunicationManagement({ schoolId }: CommunicationManag
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      {messages?.data?.map((message) => (
+                      {messages?.messages?.map((message) => (
                         <tr key={message.id} className="hover:bg-gray-50">
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
