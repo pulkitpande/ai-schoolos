@@ -5,7 +5,7 @@ export interface Homework {
   id: string;
   title: string;
   description: string;
-  subjectId: string;
+  subject: string;
   classId: string;
   assignedBy: string;
   assignedDate: string;
@@ -52,7 +52,7 @@ export interface HomeworkGrade {
 }
 
 export interface HomeworkFilters {
-  subjectId?: string;
+  subject?: string;
   classId?: string;
   assignedBy?: string;
   status?: string;
@@ -82,7 +82,19 @@ export class HomeworkService {
 
   // Get homework assignments
   async getHomework(filters?: HomeworkFilters): Promise<HomeworkListResponse> {
-    const response = await apiService.get<HomeworkListResponse>(this.HOMEWORK_ENDPOINTS.HOMEWORK, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<HomeworkListResponse>(
+      `${this.HOMEWORK_ENDPOINTS.HOMEWORK}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -135,8 +147,23 @@ export class HomeworkService {
 
   // Get homework submissions
   async getHomeworkSubmissions(homeworkId?: string, filters?: any): Promise<HomeworkSubmission[]> {
-    const params = { ...filters, homeworkId };
-    const response = await apiService.get<HomeworkSubmission[]>(this.HOMEWORK_ENDPOINTS.SUBMISSIONS, params);
+    const params = new URLSearchParams();
+    
+    if (homeworkId) {
+      params.append('homeworkId', homeworkId);
+    }
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<HomeworkSubmission[]>(
+      `${this.HOMEWORK_ENDPOINTS.SUBMISSIONS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -189,8 +216,19 @@ export class HomeworkService {
 
   // Get student homework
   async getStudentHomework(studentId: string, filters?: any): Promise<Homework[]> {
-    const params = { ...filters, studentId };
-    const response = await apiService.get<Homework[]>(`${this.HOMEWORK_ENDPOINTS.STUDENT_HOMEWORK}/${studentId}`, params);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<Homework[]>(
+      `${this.HOMEWORK_ENDPOINTS.STUDENT_HOMEWORK}/${studentId}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -201,8 +239,19 @@ export class HomeworkService {
 
   // Get student submissions
   async getStudentSubmissions(studentId: string, filters?: any): Promise<HomeworkSubmission[]> {
-    const params = { ...filters, studentId };
-    const response = await apiService.get<HomeworkSubmission[]>(`${this.HOMEWORK_ENDPOINTS.STUDENT_HOMEWORK}/${studentId}/submissions`, params);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<HomeworkSubmission[]>(
+      `${this.HOMEWORK_ENDPOINTS.STUDENT_HOMEWORK}/${studentId}/submissions?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -213,8 +262,19 @@ export class HomeworkService {
 
   // Get class homework
   async getClassHomework(classId: string, filters?: any): Promise<Homework[]> {
-    const params = { ...filters, classId };
-    const response = await apiService.get<Homework[]>(`${this.HOMEWORK_ENDPOINTS.CLASS_HOMEWORK}/${classId}`, params);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<Homework[]>(
+      `${this.HOMEWORK_ENDPOINTS.CLASS_HOMEWORK}/${classId}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -225,8 +285,19 @@ export class HomeworkService {
 
   // Get homework grades
   async getHomeworkGrades(homeworkId?: string, studentId?: string): Promise<HomeworkGrade[]> {
-    const params = { homeworkId, studentId };
-    const response = await apiService.get<HomeworkGrade[]>(this.HOMEWORK_ENDPOINTS.GRADES, params);
+    const params = new URLSearchParams();
+    
+    if (homeworkId) {
+      params.append('homeworkId', homeworkId);
+    }
+    
+    if (studentId) {
+      params.append('studentId', studentId);
+    }
+
+    const response = await apiService.get<HomeworkGrade[]>(
+      `${this.HOMEWORK_ENDPOINTS.GRADES}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -279,8 +350,23 @@ export class HomeworkService {
 
   // Get homework reports
   async getHomeworkReports(schoolId?: string, dateFrom?: string, dateTo?: string): Promise<any> {
-    const params = { schoolId, dateFrom, dateTo };
-    const response = await apiService.get<any>(this.HOMEWORK_ENDPOINTS.REPORTS, params);
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+    
+    if (dateFrom) {
+      params.append('dateFrom', dateFrom);
+    }
+    
+    if (dateTo) {
+      params.append('dateTo', dateTo);
+    }
+
+    const response = await apiService.get<any>(
+      `${this.HOMEWORK_ENDPOINTS.REPORTS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -291,8 +377,15 @@ export class HomeworkService {
 
   // Get homework statistics
   async getHomeworkStats(schoolId?: string): Promise<any> {
-    const params = schoolId ? { schoolId } : {};
-    const response = await apiService.get<any>(`${this.HOMEWORK_ENDPOINTS.REPORTS}/stats`, params);
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+
+    const response = await apiService.get<any>(
+      `${this.HOMEWORK_ENDPOINTS.REPORTS}/stats?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
