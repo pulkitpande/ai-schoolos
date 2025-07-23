@@ -112,7 +112,19 @@ export class CommunicationService {
 
   // Get messages
   async getMessages(filters?: CommunicationFilters): Promise<CommunicationListResponse> {
-    const response = await apiService.get<CommunicationListResponse>(this.COMMUNICATION_ENDPOINTS.MESSAGES, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<CommunicationListResponse>(
+      `${this.COMMUNICATION_ENDPOINTS.MESSAGES}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -165,8 +177,19 @@ export class CommunicationService {
 
   // Get user messages
   async getUserMessages(userId: string, filters?: any): Promise<Message[]> {
-    const params = { ...filters, userId };
-    const response = await apiService.get<Message[]>(`${this.COMMUNICATION_ENDPOINTS.MESSAGES}/user/${userId}`, params);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<Message[]>(
+      `${this.COMMUNICATION_ENDPOINTS.MESSAGES}/user/${userId}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -188,7 +211,19 @@ export class CommunicationService {
 
   // Get announcements
   async getAnnouncements(filters?: any): Promise<Announcement[]> {
-    const response = await apiService.get<Announcement[]>(this.COMMUNICATION_ENDPOINTS.ANNOUNCEMENTS, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<Announcement[]>(
+      `${this.COMMUNICATION_ENDPOINTS.ANNOUNCEMENTS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -241,8 +276,23 @@ export class CommunicationService {
 
   // Get notifications
   async getNotifications(userId?: string, filters?: any): Promise<Notification[]> {
-    const params = { ...filters, userId };
-    const response = await apiService.get<Notification[]>(this.COMMUNICATION_ENDPOINTS.NOTIFICATIONS, params);
+    const params = new URLSearchParams();
+    
+    if (userId) {
+      params.append('userId', userId);
+    }
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<Notification[]>(
+      `${this.COMMUNICATION_ENDPOINTS.NOTIFICATIONS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -306,8 +356,15 @@ export class CommunicationService {
 
   // Get chat rooms
   async getChatRooms(userId?: string): Promise<ChatRoom[]> {
-    const params = userId ? { userId } : {};
-    const response = await apiService.get<ChatRoom[]>(this.COMMUNICATION_ENDPOINTS.CHAT_ROOMS, params);
+    const params = new URLSearchParams();
+    
+    if (userId) {
+      params.append('userId', userId);
+    }
+
+    const response = await apiService.get<ChatRoom[]>(
+      `${this.COMMUNICATION_ENDPOINTS.CHAT_ROOMS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -360,8 +417,19 @@ export class CommunicationService {
 
   // Get chat messages
   async getChatMessages(roomId: string, filters?: any): Promise<ChatMessage[]> {
-    const params = { ...filters, roomId };
-    const response = await apiService.get<ChatMessage[]>(this.COMMUNICATION_ENDPOINTS.CHAT_MESSAGES, params);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<ChatMessage[]>(
+      `${this.COMMUNICATION_ENDPOINTS.CHAT_MESSAGES}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -394,8 +462,23 @@ export class CommunicationService {
 
   // Get communication reports
   async getCommunicationReports(schoolId?: string, dateFrom?: string, dateTo?: string): Promise<any> {
-    const params = { schoolId, dateFrom, dateTo };
-    const response = await apiService.get<any>(this.COMMUNICATION_ENDPOINTS.REPORTS, params);
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+    
+    if (dateFrom) {
+      params.append('dateFrom', dateFrom);
+    }
+    
+    if (dateTo) {
+      params.append('dateTo', dateTo);
+    }
+
+    const response = await apiService.get<any>(
+      `${this.COMMUNICATION_ENDPOINTS.REPORTS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -404,16 +487,23 @@ export class CommunicationService {
     throw new Error(response.message || 'Failed to fetch communication reports');
   }
 
-  // Get communication statistics
+  // Get communication stats
   async getCommunicationStats(schoolId?: string): Promise<any> {
-    const params = schoolId ? { schoolId } : {};
-    const response = await apiService.get<any>(`${this.COMMUNICATION_ENDPOINTS.REPORTS}/stats`, params);
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+
+    const response = await apiService.get<any>(
+      `${this.COMMUNICATION_ENDPOINTS.REPORTS}/stats?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
     }
     
-    throw new Error(response.message || 'Failed to fetch communication statistics');
+    throw new Error(response.message || 'Failed to fetch communication stats');
   }
 }
 
