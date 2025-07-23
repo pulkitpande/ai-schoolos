@@ -73,7 +73,19 @@ export class AttendanceService {
 
   // Get attendance records
   async getAttendance(filters?: AttendanceFilters): Promise<AttendanceListResponse> {
-    const response = await apiService.get<AttendanceListResponse>(this.ATTENDANCE_ENDPOINTS.ATTENDANCE, filters);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<AttendanceListResponse>(
+      `${this.ATTENDANCE_ENDPOINTS.ATTENDANCE}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -137,8 +149,19 @@ export class AttendanceService {
 
   // Get student attendance
   async getStudentAttendance(studentId: string, filters?: any): Promise<Attendance[]> {
-    const params = { ...filters, studentId };
-    const response = await apiService.get<Attendance[]>(`${this.ATTENDANCE_ENDPOINTS.STUDENT_ATTENDANCE}/${studentId}`, params);
+    const params = new URLSearchParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const response = await apiService.get<Attendance[]>(
+      `${this.ATTENDANCE_ENDPOINTS.STUDENT_ATTENDANCE}/${studentId}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -149,8 +172,15 @@ export class AttendanceService {
 
   // Get class attendance
   async getClassAttendance(classId: string, date?: string): Promise<Attendance[]> {
-    const params = date ? { date } : {};
-    const response = await apiService.get<Attendance[]>(`${this.ATTENDANCE_ENDPOINTS.CLASS_ATTENDANCE}/${classId}`, params);
+    const params = new URLSearchParams();
+    
+    if (date) {
+      params.append('date', date);
+    }
+
+    const response = await apiService.get<Attendance[]>(
+      `${this.ATTENDANCE_ENDPOINTS.CLASS_ATTENDANCE}/${classId}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -161,8 +191,27 @@ export class AttendanceService {
 
   // Get attendance reports
   async getAttendanceReports(studentId?: string, classId?: string, month?: number, year?: number): Promise<AttendanceReport[]> {
-    const params = { studentId, classId, month, year };
-    const response = await apiService.get<AttendanceReport[]>(this.ATTENDANCE_ENDPOINTS.REPORTS, params);
+    const params = new URLSearchParams();
+    
+    if (studentId) {
+      params.append('studentId', studentId);
+    }
+    
+    if (classId) {
+      params.append('classId', classId);
+    }
+    
+    if (month) {
+      params.append('month', month.toString());
+    }
+    
+    if (year) {
+      params.append('year', year.toString());
+    }
+
+    const response = await apiService.get<AttendanceReport[]>(
+      `${this.ATTENDANCE_ENDPOINTS.REPORTS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
@@ -213,46 +262,94 @@ export class AttendanceService {
     }
   }
 
-  // Get attendance statistics
+  // Get attendance stats
   async getAttendanceStats(schoolId?: string, date?: string): Promise<AttendanceStats> {
-    const params = { schoolId, date };
-    const response = await apiService.get<AttendanceStats>(this.ATTENDANCE_ENDPOINTS.STATS, params);
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+    
+    if (date) {
+      params.append('date', date);
+    }
+
+    const response = await apiService.get<AttendanceStats>(
+      `${this.ATTENDANCE_ENDPOINTS.STATS}?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
     }
     
-    throw new Error(response.message || 'Failed to fetch attendance statistics');
+    throw new Error(response.message || 'Failed to fetch attendance stats');
   }
 
-  // Get student attendance statistics
+  // Get student attendance stats
   async getStudentAttendanceStats(studentId: string, dateFrom?: string, dateTo?: string): Promise<any> {
-    const params = { dateFrom, dateTo };
-    const response = await apiService.get<any>(`${this.ATTENDANCE_ENDPOINTS.STUDENT_ATTENDANCE}/${studentId}/stats`, params);
+    const params = new URLSearchParams();
+    
+    if (dateFrom) {
+      params.append('dateFrom', dateFrom);
+    }
+    
+    if (dateTo) {
+      params.append('dateTo', dateTo);
+    }
+
+    const response = await apiService.get<any>(
+      `${this.ATTENDANCE_ENDPOINTS.STUDENT_ATTENDANCE}/${studentId}/stats?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
     }
     
-    throw new Error(response.message || 'Failed to fetch student attendance statistics');
+    throw new Error(response.message || 'Failed to fetch student attendance stats');
   }
 
-  // Get class attendance statistics
+  // Get class attendance stats
   async getClassAttendanceStats(classId: string, dateFrom?: string, dateTo?: string): Promise<any> {
-    const params = { dateFrom, dateTo };
-    const response = await apiService.get<any>(`${this.ATTENDANCE_ENDPOINTS.CLASS_ATTENDANCE}/${classId}/stats`, params);
+    const params = new URLSearchParams();
+    
+    if (dateFrom) {
+      params.append('dateFrom', dateFrom);
+    }
+    
+    if (dateTo) {
+      params.append('dateTo', dateTo);
+    }
+
+    const response = await apiService.get<any>(
+      `${this.ATTENDANCE_ENDPOINTS.CLASS_ATTENDANCE}/${classId}/stats?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
     }
     
-    throw new Error(response.message || 'Failed to fetch class attendance statistics');
+    throw new Error(response.message || 'Failed to fetch class attendance stats');
   }
 
   // Get attendance analytics
   async getAttendanceAnalytics(schoolId?: string, dateFrom?: string, dateTo?: string): Promise<any> {
-    const params = { schoolId, dateFrom, dateTo };
-    const response = await apiService.get<any>(`${this.ATTENDANCE_ENDPOINTS.STATS}/analytics`, params);
+    const params = new URLSearchParams();
+    
+    if (schoolId) {
+      params.append('schoolId', schoolId);
+    }
+    
+    if (dateFrom) {
+      params.append('dateFrom', dateFrom);
+    }
+    
+    if (dateTo) {
+      params.append('dateTo', dateTo);
+    }
+
+    const response = await apiService.get<any>(
+      `${this.ATTENDANCE_ENDPOINTS.STATS}/analytics?${params.toString()}`
+    );
     
     if (response.success && response.data) {
       return response.data;
