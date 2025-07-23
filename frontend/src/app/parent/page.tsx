@@ -364,7 +364,7 @@ export default function ParentPortal() {
                       {studentsLoading ? (
                         <div className="text-center text-gray-500">Loading children...</div>
                       ) : studentsError ? (
-                        <div className="text-center text-red-500">{studentsError.message || 'Failed to load children'}</div>
+                        <div className="text-center text-red-500">{(studentsError as any)?.message || 'Failed to load children'}</div>
                       ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                           {(studentsData?.students || []).map((student: any) => (
@@ -400,7 +400,7 @@ export default function ParentPortal() {
                       {attendanceLoading ? (
                         <div className="text-center text-gray-500">Loading attendance...</div>
                       ) : attendanceError ? (
-                        <div className="text-center text-red-500">{attendanceError.message || 'Failed to load attendance'}</div>
+                        <div className="text-center text-red-500">{(attendanceError as any)?.message || 'Failed to load attendance'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
@@ -458,7 +458,7 @@ export default function ParentPortal() {
                       {feeLoading ? (
                         <div className="text-center text-gray-500">Loading fees...</div>
                       ) : feeError ? (
-                        <div className="text-center text-red-500">{feeError.message || 'Failed to load fees'}</div>
+                        <div className="text-center text-red-500">{(feeError as any)?.message || 'Failed to load fees'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
@@ -508,7 +508,7 @@ export default function ParentPortal() {
                       {homeworkLoading ? (
                         <div className="text-center text-gray-500">Loading assignments...</div>
                       ) : homeworkError ? (
-                        <div className="text-center text-red-500">{homeworkError.message || 'Failed to load assignments'}</div>
+                        <div className="text-center text-red-500">{(homeworkError as any)?.message || 'Failed to load assignments'}</div>
                       ) : (
                         <div className="space-y-4">
                           {(homeworkData?.homework || []).map((assignment: any) => (
@@ -547,7 +547,7 @@ export default function ParentPortal() {
                       {timetableLoading ? (
                         <div className="text-center text-gray-500">Loading timetable...</div>
                       ) : timetableError ? (
-                        <div className="text-center text-red-500">{timetableError.message || 'Failed to load timetable'}</div>
+                        <div className="text-center text-red-500">{(timetableError as any)?.message || 'Failed to load timetable'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
@@ -596,7 +596,7 @@ export default function ParentPortal() {
                       {messageLoading ? (
                         <div className="text-center text-gray-500">Loading messages...</div>
                       ) : messageError ? (
-                        <div className="text-center text-red-500">{messageError.message || 'Failed to load messages'}</div>
+                        <div className="text-center text-red-500">{(messageError as any)?.message || 'Failed to load messages'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
@@ -646,7 +646,7 @@ export default function ParentPortal() {
                       {transportLoading ? (
                         <div className="text-center text-gray-500">Loading transport...</div>
                       ) : transportError ? (
-                        <div className="text-center text-red-500">{transportError.message || 'Failed to load transport'}</div>
+                        <div className="text-center text-red-500">{(transportError as any)?.message || 'Failed to load transport'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
