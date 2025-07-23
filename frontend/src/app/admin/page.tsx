@@ -1011,7 +1011,7 @@ export default function AdminPortal() {
                       {studentsLoading ? (
                         <div className="text-center text-gray-500">Loading students...</div>
                       ) : studentsError ? (
-                        <div className="text-center text-red-500">{studentsError.message || 'Failed to load students'}</div>
+                        <div className="text-center text-red-500">{(studentsError as any)?.message || 'Failed to load students'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
@@ -1109,7 +1109,7 @@ export default function AdminPortal() {
                       {staffLoading ? (
                         <div className="text-center text-gray-500">Loading staff...</div>
                       ) : staffError ? (
-                        <div className="text-center text-red-500">{staffError.message || 'Failed to load staff'}</div>
+                        <div className="text-center text-red-500">{(staffError as any)?.message || 'Failed to load staff'}</div>
                       ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                           {(staffData?.staff || []).map((staff: any) => (
@@ -1197,7 +1197,7 @@ export default function AdminPortal() {
                       {feeLoading ? (
                         <div className="text-center text-gray-500">Loading fees...</div>
                       ) : feeError ? (
-                        <div className="text-center text-red-500">{feeError.message || 'Failed to load fees'}</div>
+                        <div className="text-center text-red-500">{(feeError as any)?.message || 'Failed to load fees'}</div>
                       ) : (
                         <div className="space-y-6">
                           {/* Fee Summary */}
@@ -1328,7 +1328,7 @@ export default function AdminPortal() {
                       {examLoading ? (
                         <div className="text-center text-gray-500">Loading exams...</div>
                       ) : examError ? (
-                        <div className="text-center text-red-500">{examError.message || 'Failed to load exams'}</div>
+                        <div className="text-center text-red-500">{(examError as any)?.message || 'Failed to load exams'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
@@ -1437,7 +1437,7 @@ export default function AdminPortal() {
                       {attendanceLoading ? (
                         <div className="text-center text-gray-500">Loading attendance...</div>
                       ) : attendanceError ? (
-                        <div className="text-center text-red-500">{attendanceError.message || 'Failed to load attendance'}</div>
+                        <div className="text-center text-red-500">{(attendanceError as any)?.message || 'Failed to load attendance'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
@@ -1543,7 +1543,7 @@ export default function AdminPortal() {
                       {homeworkLoading ? (
                         <div className="text-center text-gray-500">Loading homework...</div>
                       ) : homeworkError ? (
-                        <div className="text-center text-red-500">{homeworkError.message || 'Failed to load homework'}</div>
+                        <div className="text-center text-red-500">{(homeworkError as any)?.message || 'Failed to load homework'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
@@ -1650,7 +1650,7 @@ export default function AdminPortal() {
                       {timetableLoading ? (
                         <div className="text-center text-gray-500">Loading timetables...</div>
                       ) : timetableError ? (
-                        <div className="text-center text-red-500">{timetableError.message || 'Failed to load timetables'}</div>
+                        <div className="text-center text-red-500">{(timetableError as any)?.message || 'Failed to load timetables'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
@@ -1755,7 +1755,7 @@ export default function AdminPortal() {
                       {libraryLoading ? (
                         <div className="text-center text-gray-500">Loading library...</div>
                       ) : libraryError ? (
-                        <div className="text-center text-red-500">{libraryError.message || 'Failed to load library'}</div>
+                        <div className="text-center text-red-500">{(libraryError as any)?.message || 'Failed to load library'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
@@ -1872,7 +1872,7 @@ export default function AdminPortal() {
                       {transportLoading ? (
                         <div className="text-center text-gray-500">Loading transport...</div>
                       ) : transportError ? (
-                        <div className="text-center text-red-500">{transportError.message || 'Failed to load transport'}</div>
+                        <div className="text-center text-red-500">{(transportError as any)?.message || 'Failed to load transport'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
@@ -1979,7 +1979,7 @@ export default function AdminPortal() {
                       {communicationLoading ? (
                         <div className="text-center text-gray-500">Loading messages...</div>
                       ) : communicationError ? (
-                        <div className="text-center text-red-500">{communicationError.message || 'Failed to load messages'}</div>
+                        <div className="text-center text-red-500">{(communicationError as any)?.message || 'Failed to load messages'}</div>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
