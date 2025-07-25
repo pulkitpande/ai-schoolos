@@ -317,3 +317,140 @@ This setup provides:
 - **Cloud-ready** deployment
 
 **Next step:** Deploy this to your EC2 instance and enjoy a production-ready, scalable application!
+
+## 🧹 **Complete EC2 Cleanup & Fresh Deployment**
+
+### **Step 1: SSH into your EC2 instance**
+```bash
+ssh -i your-key.pem ubuntu@3.110.158.50
+```
+
+### **Step 2: Stop all running containers and clean up**
+```bash
+<code_block_to_apply_changes_from>
+```
+
+### **Step 3: Clean up the project directory**
+```bash
+# Remove the entire project directory
+cd ..
+rm -rf ai-schoolos
+
+# Clean up any logs or temporary files
+sudo rm -rf /var/log/docker*
+sudo rm -rf /tmp/*
+```
+
+### **Step 4: Fresh clone and setup**
+```bash
+# Clone fresh from GitHub
+git clone https://github.com/your-username/ai-schoolos.git
+cd ai-schoolos
+
+# Make deployment script executable
+chmod +x deploy-production.sh
+```
+
+### **Step 5: Run production deployment**
+```bash
+# Run the production deployment script
+sudo ./deploy-production.sh
+```
+
+### **Step 6: Verify everything is working**
+```bash
+# Check if all services are running
+docker-compose -f docker-compose.production.yml ps
+
+# Check logs
+docker-compose -f docker-compose.production.yml logs -f
+
+# Test the application
+curl http://localhost/health
+curl http://localhost
+```
+
+### **Step 7: Test external access**
+```bash
+# Get your EC2 public IP
+curl -s http://169.254.169.254/latest/meta-data/public-ipv4
+
+# Test from external
+curl http://3.110.158.50/health
+```
+
+## 🔧 **Alternative: Quick Clean Script**
+
+If you want a faster approach, create this script:
+
+```bash
+#!/bin/bash
+echo "🧹 Cleaning EC2 instance..."
+
+# Stop and remove all containers
+docker-compose -f docker-compose.production.yml down --volumes --remove-orphans 2>/dev/null || true
+docker stop $(docker ps -aq) 2>/dev/null || true
+docker rm $(docker ps -aq) 2>/dev/null || true
+
+# Remove all images
+docker rmi $(docker images -aq) 2>/dev/null || true
+docker system prune -af --volumes
+
+# Clean project
+cd ..
+rm -rf ai-schoolos
+
+# Fresh clone
+git clone https://github.com/your-username/ai-schoolos.git
+cd ai-schoolos
+chmod +x deploy-production.sh
+
+# Deploy
+sudo ./deploy-production.sh
+
+echo "✅ Clean deployment complete!"
+```
+
+Save this as `clean-deploy.sh` and run:
+```bash
+chmod +x clean-deploy.sh
+./clean-deploy.sh
+```
+
+## 🎉 **Expected Results**
+
+After the clean deployment, you should see:
+
+✅ **All services running:**
+- nginx (port 80)
+- frontend (internal)
+- api-gateway (internal)
+- auth-service (internal)
+- student-service (internal)
+
+✅ **Health checks passing:**
+- `http://localhost/health` - returns 200 OK
+- `http://localhost` - frontend loads
+- `http://localhost/api/health` - API gateway working
+
+✅ **External access:**
+- `http://3.110.158.50` - accessible from anywhere
+
+## 🎉 **If you encounter any issues:**
+
+1. **Check Docker logs:**
+```bash
+docker-compose -f docker-compose.production.yml logs -f
+```
+
+2. **Check individual service logs:**
+```bash
+docker-compose -f docker-compose.production.yml logs -f frontend
+docker-compose -f docker-compose.production.yml logs -f nginx
+```
+
+3. **Verify EC2 Security Group:**
+- Port 80 (HTTP) should be open
+- Remove any other ports (3000, 8000, etc.)
+
+This clean deployment will give you a fresh start with the latest code and should resolve any previous issues!
