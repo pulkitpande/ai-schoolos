@@ -629,7 +629,7 @@ export const useDeleteMessage = () => {
 export const useAnalyticsData = (filters?: AnalyticsFilters, options?: UseQueryOptions<AnalyticsListResponse>) => {
   return useQuery({
     queryKey: ['analytics-data', filters],
-    queryFn: () => analyticsService.getAnalyticsData(filters),
+    queryFn: () => analyticsService.getAnalyticsData(filters?.schoolId, filters?.dateFrom, filters?.dateTo),
     ...options,
   });
 };
