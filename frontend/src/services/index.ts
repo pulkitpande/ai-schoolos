@@ -1,5 +1,6 @@
 // Export all services
-export { default as apiService, ApiService, ApiResponse } from './api';
+export { default as apiService, ApiService } from './api';
+export type { ApiResponse } from './api';
 export { default as authService, AuthService } from './auth';
 export type { User, LoginCredentials, LoginResponse, RegisterData } from './auth';
 export { default as studentService, StudentService } from './student';
