@@ -384,7 +384,7 @@ export const useDeleteAttendance = () => {
 export const useHomework = (filters?: HomeworkFilters, options?: UseQueryOptions<HomeworkListResponse>) => {
   return useQuery({
     queryKey: ['homework', filters],
-    queryFn: () => homeworkService.getHomework(filters),
+    queryFn: () => homeworkService.getHomeworkAssignments(filters),
     ...options,
   });
 };
@@ -392,7 +392,7 @@ export const useHomework = (filters?: HomeworkFilters, options?: UseQueryOptions
 export const useHomeworkById = (id: string, options?: UseQueryOptions<Homework>) => {
   return useQuery({
     queryKey: ['homework', id],
-    queryFn: () => homeworkService.getHomeworkById(id),
+    queryFn: () => homeworkService.getHomeworkAssignment(id),
     enabled: !!id,
     ...options,
   });
@@ -401,7 +401,7 @@ export const useHomeworkById = (id: string, options?: UseQueryOptions<Homework>)
 export const useCreateHomework = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: Partial<Homework>) => homeworkService.createHomework(data),
+    mutationFn: (data: Partial<Homework>) => homeworkService.createHomeworkAssignment(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['homework'] });
     },
@@ -411,7 +411,7 @@ export const useCreateHomework = () => {
 export const useUpdateHomework = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<Homework> }) => homeworkService.updateHomework(id, data),
+    mutationFn: ({ id, data }: { id: string; data: Partial<Homework> }) => homeworkService.updateHomeworkAssignment(id, data),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ['homework'] });
       queryClient.invalidateQueries({ queryKey: ['homework', id] });
@@ -422,7 +422,7 @@ export const useUpdateHomework = () => {
 export const useDeleteHomework = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => homeworkService.deleteHomework(id),
+    mutationFn: (id: string) => homeworkService.deleteHomeworkAssignment(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['homework'] });
     },
