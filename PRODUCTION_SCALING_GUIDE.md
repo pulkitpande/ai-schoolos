@@ -454,3 +454,93 @@ docker-compose -f docker-compose.production.yml logs -f nginx
 - Remove any other ports (3000, 8000, etc.)
 
 This clean deployment will give you a fresh start with the latest code and should resolve any previous issues!
+
+## 🔧 **Let's fix this:**
+
+### **Step 1: Check the current environment variable**
+```bash
+# SSH into EC2
+ssh -i your-key.pem ubuntu@3.110.158.50
+
+# Navigate to project
+cd /home/ubuntu/ai-schoolos
+
+# Check the current docker-compose file
+grep -n "NEXT_PUBLIC_API_URL" docker-compose.production.yml
+```
+
+### **Step 2: Update the environment variable**
+```bash
+# Edit the docker-compose file
+nano docker-compose.production.yml
+```
+
+**Find line 35 and change:**
+```yaml
+```
+
+### **Step 3: Rebuild the frontend**
+```bash
+# Stop the frontend container
+docker-compose -f docker-compose.production.yml stop frontend
+
+# Remove the frontend container
+docker-compose -f docker-compose.production.yml rm -f frontend
+
+# Rebuild and start the frontend
+docker-compose -f docker-compose.production.yml up -d --build frontend
+
+# Check the logs
+docker-compose -f docker-compose.production.yml logs -f frontend
+```
+
+### **Step 4: Verify the environment variable**
+```bash
+# Check if the environment variable is set correctly
+docker exec ai-schoolos-frontend env | grep NEXT_PUBLIC_API_URL
+```
+
+### **Step 5: Test the API**
+```bash
+# Test the API through nginx
+curl -X POST http://localhost/api/v1/students \
+  -H "Content-Type: application/json" \
+  -d '{
+    "first_name": "Test",
+    "last_name": "Student",
+    "email": "test@example.com",
+    "admission_number": "TEST001",
+    "tenant_id": "test-tenant"
+  }'
+```
+
+**Run these commands step by step:**
+
+```bash
+# 1. SSH into EC2
+ssh -i your-key.pem ubuntu@3.110.158.50
+
+# 2. Navigate to project
+cd /home/ubuntu/ai-schoolos
+
+# 3. Check current setting
+grep -n "NEXT_PUBLIC_API_URL" docker-compose.production.yml
+
+# 4. Edit the file
+nano docker-compose.production.yml
+
+# 5. Change line 35 from:
+# - NEXT_PUBLIC_API_URL=http://api-gateway:8000
+# To:
+# - NEXT_PUBLIC_API_URL=http://localhost/api
+
+# 6. Save and exit (Ctrl+X, Y, Enter)
+
+# 7. Rebuild frontend
+docker-compose -f docker-compose.production.yml up -d --build frontend
+
+# 8. Check environment variable
+docker exec ai-schoolos-frontend env | grep NEXT_PUBLIC_API_URL
+```
+
+This should fix the connection refused error and allow you to add new students!
