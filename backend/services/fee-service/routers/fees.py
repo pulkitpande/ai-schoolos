@@ -27,51 +27,11 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/fees", tags=["fees"])
 
 
-@router.get("/")
-async def root():
+@router.get("/status")
+async def status():
     return {"message": "Fee Service is running"}
 
-
-# Fee Structure CRUD Operations
-@router.post("/structures", response_model=FeeStructureResponse)
-async def create_fee_structure(
-    fee_structure_data: FeeStructureCreate,
-    db: Session = Depends(get_db)
-):
-    """Create a new fee structure."""
-    try:
-        # Check if fee structure code already exists
-        existing_structure = db.query(FeeStructure).filter(
-            FeeStructure.code == fee_structure_data.code,
-            FeeStructure.tenant_id == fee_structure_data.tenant_id
-        ).first()
-        
-        if existing_structure:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Fee structure with this code already exists"
-            )
-        
-        # Create new fee structure
-        fee_structure = FeeStructure(**fee_structure_data.dict())
-        db.add(fee_structure)
-        db.commit()
-        db.refresh(fee_structure)
-        
-        logger.info(f"New fee structure created: {fee_structure.code}")
-        return fee_structure
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error creating fee structure: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Internal server error"
-        )
-
-
-@router.get("/structures", response_model=FeeStructureListResponse)
+@router.get("/", response_model=FeeStructureListResponse)
 async def get_fee_structures(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),

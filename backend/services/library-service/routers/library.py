@@ -30,52 +30,16 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/library", tags=["library"])
 
 
-@router.get("/")
-async def root():
+@router.get("/status")
+async def status():
     return {"message": "Library Service is running"}
 
-
-# Book CRUD Operations
-@router.post("/books", response_model=BookResponse)
-async def create_book(
-    book_data: BookCreate,
-    db: Session = Depends(get_db)
-):
-    """Create a new book."""
-    try:
-        # Create new book
-        book = Book(**book_data.dict())
-        db.add(book)
-        db.commit()
-        db.refresh(book)
-        
-        logger.info(f"New book created: {book.title}")
-        return book
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error creating book: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Internal server error"
-        )
-
-
-@router.get("/books", response_model=BookListResponse)
+@router.get("/", response_model=BookListResponse)
 async def get_books(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
-    tenant_id: Optional[str] = None,
-    title: Optional[str] = None,
+    category: Optional[str] = None,
     author: Optional[str] = None,
-    isbn: Optional[str] = None,
-    genre: Optional[str] = None,
-    subject: Optional[str] = None,
-    format: Optional[str] = None,
-    status: Optional[str] = None,
-    is_reference: Optional[bool] = None,
-    is_digital: Optional[bool] = None,
     search: Optional[str] = None,
     db: Session = Depends(get_db)
 ):
@@ -84,35 +48,11 @@ async def get_books(
         query = db.query(Book)
         
         # Apply filters
-        if tenant_id:
-            query = query.filter(Book.tenant_id == tenant_id)
-        
-        if title:
-            query = query.filter(Book.title.ilike(f"%{title}%"))
+        if category:
+            query = query.filter(Book.category == category)
         
         if author:
             query = query.filter(Book.author.ilike(f"%{author}%"))
-        
-        if isbn:
-            query = query.filter(Book.isbn == isbn)
-        
-        if genre:
-            query = query.filter(Book.genre == genre)
-        
-        if subject:
-            query = query.filter(Book.subject == subject)
-        
-        if format:
-            query = query.filter(Book.format == format)
-        
-        if status:
-            query = query.filter(Book.status == status)
-        
-        if is_reference is not None:
-            query = query.filter(Book.is_reference == is_reference)
-        
-        if is_digital is not None:
-            query = query.filter(Book.is_digital == is_digital)
         
         # Search functionality
         if search:

@@ -26,8 +26,8 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/students", tags=["students"])
 
 
-@router.get("/")
-async def root():
+@router.get("/status")
+async def status():
     return {"message": "Student Service is running"}
 
 
