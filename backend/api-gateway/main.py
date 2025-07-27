@@ -53,7 +53,7 @@ SERVICES = {
         "health": "/health"
     },
     "students": {
-        "url": os.getenv("STUDENT_SERVICE_URL", "http://ai-schoolos-student-service:8002"),
+        "url": os.getenv("STUDENT_SERVICE_URL", "http://student-service:8002"),
         "health": "/health"
     },
     "staff": {
@@ -65,15 +65,15 @@ SERVICES = {
         "health": "/health"
     },
     "exams": {
-        "url": os.getenv("EXAM_SERVICE_URL", "http://exam-service:8005"),
+        "url": os.getenv("EXAM_SERVICE_URL", "http://exam-service:8007"),
         "health": "/health"
     },
     "attendance": {
-        "url": os.getenv("ATTENDANCE_SERVICE_URL", "http://attendance-service:8006"),
+        "url": os.getenv("ATTENDANCE_SERVICE_URL", "http://attendance-service:8009"),
         "health": "/health"
     },
     "homework": {
-        "url": os.getenv("HOMEWORK_SERVICE_URL", "http://homework-service:8007"),
+        "url": os.getenv("HOMEWORK_SERVICE_URL", "http://homework-service:8005"),
         "health": "/health"
     },
     "timetable": {
@@ -81,7 +81,7 @@ SERVICES = {
         "health": "/health"
     },
     "library": {
-        "url": os.getenv("LIBRARY_SERVICE_URL", "http://library-service:8009"),
+        "url": os.getenv("LIBRARY_SERVICE_URL", "http://library-service:8006"),
         "health": "/health"
     },
     "transport": {

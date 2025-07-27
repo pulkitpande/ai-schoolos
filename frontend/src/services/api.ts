@@ -1,27 +1,27 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
-// API Configuration
+// API Configuration - All requests go through nginx proxy on port 80
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
-// Service URLs
+// Service URLs - All pointing to nginx proxy on port 80
 const SERVICE_URLS = {
-  auth: process.env.NEXT_PUBLIC_AUTH_SERVICE_URL || 'http://localhost:8001',
-  student: process.env.NEXT_PUBLIC_STUDENT_SERVICE_URL || 'http://localhost:8002',
-  staff: process.env.NEXT_PUBLIC_STAFF_SERVICE_URL || 'http://localhost:8003',
-  fee: process.env.NEXT_PUBLIC_FEE_SERVICE_URL || 'http://localhost:8004',
-  homework: process.env.NEXT_PUBLIC_HOMEWORK_SERVICE_URL || 'http://localhost:8005',
-  library: process.env.NEXT_PUBLIC_LIBRARY_SERVICE_URL || 'http://localhost:8006',
-  exam: process.env.NEXT_PUBLIC_EXAM_SERVICE_URL || 'http://localhost:8007',
-  timetable: process.env.NEXT_PUBLIC_TIMETABLE_SERVICE_URL || 'http://localhost:8008',
-  attendance: process.env.NEXT_PUBLIC_ATTENDANCE_SERVICE_URL || 'http://localhost:8009',
-  transport: process.env.NEXT_PUBLIC_TRANSPORT_SERVICE_URL || 'http://localhost:8010',
-  communication: process.env.NEXT_PUBLIC_COMMUNICATION_SERVICE_URL || 'http://localhost:8011',
-  analytics: process.env.NEXT_PUBLIC_ANALYTICS_SERVICE_URL || 'http://localhost:8012',
-  notification: process.env.NEXT_PUBLIC_NOTIFICATION_SERVICE_URL || 'http://localhost:8013',
-  config: process.env.NEXT_PUBLIC_CONFIG_SERVICE_URL || 'http://localhost:8014',
-  superAdmin: process.env.NEXT_PUBLIC_SUPER_ADMIN_SERVICE_URL || 'http://localhost:8015',
-  ai: process.env.NEXT_PUBLIC_AI_SERVICE_URL || 'http://localhost:8016',
-  aiAnalytics: process.env.NEXT_PUBLIC_AI_ANALYTICS_SERVICE_URL || 'http://localhost:8017',
+  auth: process.env.NEXT_PUBLIC_AUTH_SERVICE_URL || 'http://localhost:80',
+  student: process.env.NEXT_PUBLIC_STUDENT_SERVICE_URL || 'http://localhost:80',
+  staff: process.env.NEXT_PUBLIC_STAFF_SERVICE_URL || 'http://localhost:80',
+  fee: process.env.NEXT_PUBLIC_FEE_SERVICE_URL || 'http://localhost:80',
+  homework: process.env.NEXT_PUBLIC_HOMEWORK_SERVICE_URL || 'http://localhost:80',
+  library: process.env.NEXT_PUBLIC_LIBRARY_SERVICE_URL || 'http://localhost:80',
+  exam: process.env.NEXT_PUBLIC_EXAM_SERVICE_URL || 'http://localhost:80',
+  timetable: process.env.NEXT_PUBLIC_TIMETABLE_SERVICE_URL || 'http://localhost:80',
+  attendance: process.env.NEXT_PUBLIC_ATTENDANCE_SERVICE_URL || 'http://localhost:80',
+  transport: process.env.NEXT_PUBLIC_TRANSPORT_SERVICE_URL || 'http://localhost:80',
+  communication: process.env.NEXT_PUBLIC_COMMUNICATION_SERVICE_URL || 'http://localhost:80',
+  analytics: process.env.NEXT_PUBLIC_ANALYTICS_SERVICE_URL || 'http://localhost:80',
+  notification: process.env.NEXT_PUBLIC_NOTIFICATION_SERVICE_URL || 'http://localhost:80',
+  config: process.env.NEXT_PUBLIC_CONFIG_SERVICE_URL || 'http://localhost:80',
+  superAdmin: process.env.NEXT_PUBLIC_SUPER_ADMIN_SERVICE_URL || 'http://localhost:80',
+  ai: process.env.NEXT_PUBLIC_AI_SERVICE_URL || 'http://localhost:80',
+  aiAnalytics: process.env.NEXT_PUBLIC_AI_ANALYTICS_SERVICE_URL || 'http://localhost:80',
 };
 
 // Create axios instance with default config
@@ -95,7 +95,7 @@ export const createServiceClient = (baseURL: string): AxiosInstance => {
   return client;
 };
 
-// Export service clients
+// Export service clients - All pointing to nginx proxy
 export const authClient = createServiceClient(SERVICE_URLS.auth);
 export const studentClient = createServiceClient(SERVICE_URLS.student);
 export const staffClient = createServiceClient(SERVICE_URLS.staff);
