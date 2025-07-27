@@ -27,6 +27,11 @@ from ..schemas import (
 router = APIRouter(prefix="/config", tags=["config"])
 
 
+@router.get("/")
+async def root():
+    return {"message": "Config Service is running"}
+
+
 # System Configuration Management
 @router.post("/system", response_model=SystemConfigResponse, status_code=status.HTTP_201_CREATED)
 async def create_system_config(

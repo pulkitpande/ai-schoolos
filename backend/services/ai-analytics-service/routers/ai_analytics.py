@@ -32,6 +32,10 @@ from ..schemas import (
 router = APIRouter(prefix="/ai-analytics", tags=["ai-analytics"])
 
 
+@router.get("/")
+async def root():
+    return {"message": "AI Analytics Service is running"}
+
 # AI Analytics Management
 @router.post("/analytics", response_model=AIAnalyticsResponse, status_code=status.HTTP_201_CREATED)
 async def create_ai_analytics(

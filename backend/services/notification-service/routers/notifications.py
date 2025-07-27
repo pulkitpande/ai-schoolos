@@ -28,6 +28,11 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/notifications", tags=["notifications"])
 
 
+@router.get("/")
+async def root():
+    return {"message": "Notification Service is running"}
+
+
 # Notification CRUD Operations
 @router.post("/", response_model=NotificationResponse)
 async def create_notification(

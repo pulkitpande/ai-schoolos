@@ -27,6 +27,11 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/fees", tags=["fees"])
 
 
+@router.get("/")
+async def root():
+    return {"message": "Fee Service is running"}
+
+
 # Fee Structure CRUD Operations
 @router.post("/structures", response_model=FeeStructureResponse)
 async def create_fee_structure(

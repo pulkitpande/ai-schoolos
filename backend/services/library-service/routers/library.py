@@ -30,6 +30,11 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/library", tags=["library"])
 
 
+@router.get("/")
+async def root():
+    return {"message": "Library Service is running"}
+
+
 # Book CRUD Operations
 @router.post("/books", response_model=BookResponse)
 async def create_book(

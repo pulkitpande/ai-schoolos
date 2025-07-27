@@ -54,6 +54,11 @@ limiter = Limiter(key_func=get_remote_address)
 router = APIRouter(prefix="/api/v1/timetable", tags=["timetable"])
 
 
+@router.get("/")
+async def root():
+    return {"message": "Timetable Service is running"}
+
+
 # ============================================================================
 # SUBJECTS
 # ============================================================================

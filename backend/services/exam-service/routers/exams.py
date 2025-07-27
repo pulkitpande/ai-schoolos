@@ -27,6 +27,11 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/exams", tags=["exams"])
 
 
+@router.get("/")
+async def root():
+    return {"message": "Exam Service is running"}
+
+
 # Exam CRUD Operations
 @router.post("/", response_model=ExamResponse)
 async def create_exam(

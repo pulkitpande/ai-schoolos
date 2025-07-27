@@ -26,6 +26,11 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/students", tags=["students"])
 
 
+@router.get("/")
+async def root():
+    return {"message": "Student Service is running"}
+
+
 # Student CRUD Operations
 @router.post("/", response_model=StudentResponse)
 async def create_student(

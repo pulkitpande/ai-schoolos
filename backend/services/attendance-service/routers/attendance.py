@@ -50,6 +50,11 @@ limiter = Limiter(key_func=get_remote_address)
 router = APIRouter(prefix="/api/v1/attendance", tags=["attendance"])
 
 
+@router.get("/")
+async def root():
+    return {"message": "Attendance Service is running"}
+
+
 # ============================================================================
 # ATTENDANCE RECORDS
 # ============================================================================

@@ -29,6 +29,11 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/auth", tags=["authentication"])
 
 
+@router.get("/")
+async def root():
+    return {"message": "Auth Service is running"}
+
+
 @router.post("/login", response_model=LoginResponse)
 async def login(
     login_data: LoginRequest,

@@ -25,6 +25,11 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/staff", tags=["staff"])
 
 
+@router.get("/")
+async def root():
+    return {"message": "Staff Service is running"}
+
+
 # Staff CRUD Operations
 @router.post("/", response_model=StaffResponse)
 async def create_staff(

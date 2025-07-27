@@ -29,6 +29,11 @@ from ..schemas import (
 router = APIRouter(prefix="/transport", tags=["transport"])
 
 
+@router.get("/")
+async def root():
+    return {"message": "Transport Service is running"}
+
+
 # Vehicle Management
 @router.post("/vehicles", response_model=VehicleResponse, status_code=status.HTTP_201_CREATED)
 async def create_vehicle(

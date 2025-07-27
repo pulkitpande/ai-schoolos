@@ -27,6 +27,11 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/homework", tags=["homework"])
 
 
+@router.get("/")
+async def root():
+    return {"message": "Homework Service is running"}
+
+
 # Assignment CRUD Operations
 @router.post("/assignments", response_model=AssignmentResponse)
 async def create_assignment(

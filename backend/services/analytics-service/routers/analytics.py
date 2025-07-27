@@ -30,6 +30,11 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/analytics", tags=["analytics"])
 
 
+@router.get("/")
+async def root():
+    return {"message": "Analytics Service is running"}
+
+
 # Analytics Data CRUD Operations
 @router.post("/data", response_model=AnalyticsDataResponse)
 async def create_analytics_data(

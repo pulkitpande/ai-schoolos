@@ -30,6 +30,11 @@ from ..schemas import (
 router = APIRouter(prefix="/ai", tags=["ai"])
 
 
+@router.get("/")
+async def root():
+    return {"message": "AI Service is running"}
+
+
 # AI Model Management
 @router.post("/models", response_model=AIModelResponse, status_code=status.HTTP_201_CREATED)
 async def create_ai_model(

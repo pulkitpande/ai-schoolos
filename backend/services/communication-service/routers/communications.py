@@ -29,6 +29,11 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/communications", tags=["communications"])
 
 
+@router.get("/")
+async def root():
+    return {"message": "Communication Service is running"}
+
+
 # Message CRUD Operations
 @router.post("/messages", response_model=MessageResponse)
 async def create_message(
