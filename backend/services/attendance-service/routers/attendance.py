@@ -82,7 +82,7 @@ async def create_attendance_record(request: Request, record: AttendanceRecordCre
 
 @router.get("/records/{record_id}", response_model=AttendanceRecordResponse)
 @limiter.limit("200/minute")
-async def get_attendance_record(
+async def get_attendance_record(request: Request,
     record_id: str = Path(..., description="Attendance record ID"),
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID")
@@ -150,6 +150,7 @@ async def list_attendance_records(request: Request, db: Session = Depends(get_db
 @router.put("/records/{record_id}", response_model=AttendanceRecordResponse)
 @limiter.limit("100/minute")
 async def update_attendance_record(
+    request: Request,
     record_update: AttendanceRecordUpdate,
     record_id: str = Path(..., description="Attendance record ID"),
     db: Session = Depends(get_db),
@@ -189,6 +190,7 @@ async def update_attendance_record(
 @router.delete("/records/{record_id}", response_model=SuccessResponse)
 @limiter.limit("50/minute")
 async def delete_attendance_record(
+    request: Request,
     record_id: str = Path(..., description="Attendance record ID"),
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID")
@@ -303,6 +305,7 @@ async def get_attendance_stats(request: Request, db: Session = Depends(get_db), 
 @router.post("/biometric", response_model=BiometricDataResponse, status_code=status.HTTP_201_CREATED)
 @limiter.limit("50/minute")
 async def create_biometric_data(
+    request: Request,
     biometric_data: BiometricDataCreate,
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID")
@@ -328,6 +331,7 @@ async def create_biometric_data(
 @router.get("/biometric/{biometric_id}", response_model=BiometricDataResponse)
 @limiter.limit("200/minute")
 async def get_biometric_data(
+    request: Request,
     biometric_id: str = Path(..., description="Biometric data ID"),
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID")
@@ -352,6 +356,7 @@ async def get_biometric_data(
 @router.get("/biometric", response_model=List[BiometricDataResponse])
 @limiter.limit("200/minute")
 async def list_biometric_data(
+    request: Request,
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID"),
     user_id: Optional[str] = Query(None, description="User ID"),
@@ -379,6 +384,7 @@ async def list_biometric_data(
 @router.put("/biometric/{biometric_id}", response_model=BiometricDataResponse)
 @limiter.limit("50/minute")
 async def update_biometric_data(
+    request: Request,
     biometric_update: BiometricDataUpdate,
     biometric_id: str = Path(..., description="Biometric data ID"),
     db: Session = Depends(get_db),
@@ -418,6 +424,7 @@ async def update_biometric_data(
 @router.delete("/biometric/{biometric_id}", response_model=SuccessResponse)
 @limiter.limit("30/minute")
 async def delete_biometric_data(
+    request: Request,
     biometric_id: str = Path(..., description="Biometric data ID"),
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID")
@@ -455,6 +462,7 @@ async def delete_biometric_data(
 @router.post("/rules", response_model=AttendanceRuleResponse, status_code=status.HTTP_201_CREATED)
 @limiter.limit("50/minute")
 async def create_attendance_rule(
+    request: Request,
     rule: AttendanceRuleCreate,
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID")
@@ -480,6 +488,7 @@ async def create_attendance_rule(
 @router.get("/rules/{rule_id}", response_model=AttendanceRuleResponse)
 @limiter.limit("200/minute")
 async def get_attendance_rule(
+    request: Request,
     rule_id: str = Path(..., description="Attendance rule ID"),
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID")
@@ -504,6 +513,7 @@ async def get_attendance_rule(
 @router.get("/rules", response_model=List[AttendanceRuleResponse])
 @limiter.limit("200/minute")
 async def list_attendance_rules(
+    request: Request,
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID"),
     rule_type: Optional[str] = Query(None, description="Rule type"),
@@ -528,6 +538,7 @@ async def list_attendance_rules(
 @router.put("/rules/{rule_id}", response_model=AttendanceRuleResponse)
 @limiter.limit("50/minute")
 async def update_attendance_rule(
+    request: Request,
     rule_update: AttendanceRuleUpdate,
     rule_id: str = Path(..., description="Attendance rule ID"),
     db: Session = Depends(get_db),
@@ -567,6 +578,7 @@ async def update_attendance_rule(
 @router.delete("/rules/{rule_id}", response_model=SuccessResponse)
 @limiter.limit("30/minute")
 async def delete_attendance_rule(
+    request: Request,
     rule_id: str = Path(..., description="Attendance rule ID"),
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID")
@@ -604,6 +616,7 @@ async def delete_attendance_rule(
 @router.post("/devices", response_model=AttendanceDeviceResponse, status_code=status.HTTP_201_CREATED)
 @limiter.limit("30/minute")
 async def create_attendance_device(
+    request: Request,
     device: AttendanceDeviceCreate,
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID")
@@ -629,6 +642,7 @@ async def create_attendance_device(
 @router.get("/devices/{device_id}", response_model=AttendanceDeviceResponse)
 @limiter.limit("200/minute")
 async def get_attendance_device(
+    request: Request,
     device_id: str = Path(..., description="Attendance device ID"),
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID")
@@ -653,6 +667,7 @@ async def get_attendance_device(
 @router.get("/devices", response_model=List[AttendanceDeviceResponse])
 @limiter.limit("200/minute")
 async def list_attendance_devices(
+    request: Request,
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID"),
     device_type: Optional[str] = Query(None, description="Device type"),
@@ -680,6 +695,7 @@ async def list_attendance_devices(
 @router.put("/devices/{device_id}", response_model=AttendanceDeviceResponse)
 @limiter.limit("50/minute")
 async def update_attendance_device(
+    request: Request,
     device_update: AttendanceDeviceUpdate,
     device_id: str = Path(..., description="Attendance device ID"),
     db: Session = Depends(get_db),
@@ -719,6 +735,7 @@ async def update_attendance_device(
 @router.delete("/devices/{device_id}", response_model=SuccessResponse)
 @limiter.limit("20/minute")
 async def delete_attendance_device(
+    request: Request,
     device_id: str = Path(..., description="Attendance device ID"),
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID")
@@ -756,6 +773,7 @@ async def delete_attendance_device(
 @router.post("/exceptions", response_model=AttendanceExceptionResponse, status_code=status.HTTP_201_CREATED)
 @limiter.limit("50/minute")
 async def create_attendance_exception(
+    request: Request,
     exception: AttendanceExceptionCreate,
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID")
@@ -781,6 +799,7 @@ async def create_attendance_exception(
 @router.get("/exceptions/{exception_id}", response_model=AttendanceExceptionResponse)
 @limiter.limit("200/minute")
 async def get_attendance_exception(
+    request: Request,
     exception_id: str = Path(..., description="Attendance exception ID"),
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID")
@@ -805,6 +824,7 @@ async def get_attendance_exception(
 @router.get("/exceptions", response_model=List[AttendanceExceptionResponse])
 @limiter.limit("200/minute")
 async def list_attendance_exceptions(
+    request: Request,
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID"),
     student_id: Optional[str] = Query(None, description="Student ID"),
@@ -838,6 +858,7 @@ async def list_attendance_exceptions(
 @router.put("/exceptions/{exception_id}", response_model=AttendanceExceptionResponse)
 @limiter.limit("50/minute")
 async def update_attendance_exception(
+    request: Request,
     exception_update: AttendanceExceptionUpdate,
     exception_id: str = Path(..., description="Attendance exception ID"),
     db: Session = Depends(get_db),
@@ -877,6 +898,7 @@ async def update_attendance_exception(
 @router.delete("/exceptions/{exception_id}", response_model=SuccessResponse)
 @limiter.limit("30/minute")
 async def delete_attendance_exception(
+    request: Request,
     exception_id: str = Path(..., description="Attendance exception ID"),
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID")
@@ -914,6 +936,7 @@ async def delete_attendance_exception(
 @router.post("/reports", response_model=AttendanceReportResponse, status_code=status.HTTP_201_CREATED)
 @limiter.limit("30/minute")
 async def create_attendance_report(
+    request: Request,
     report: AttendanceReportCreate,
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID")
@@ -939,6 +962,7 @@ async def create_attendance_report(
 @router.get("/reports/{report_id}", response_model=AttendanceReportResponse)
 @limiter.limit("200/minute")
 async def get_attendance_report(
+    request: Request,
     report_id: str = Path(..., description="Attendance report ID"),
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID")
@@ -963,6 +987,7 @@ async def get_attendance_report(
 @router.get("/reports", response_model=List[AttendanceReportResponse])
 @limiter.limit("200/minute")
 async def list_attendance_reports(
+    request: Request,
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID"),
     report_type: Optional[str] = Query(None, description="Report type"),
@@ -987,6 +1012,7 @@ async def list_attendance_reports(
 @router.post("/analytics", response_model=AttendanceAnalyticsResponse, status_code=status.HTTP_201_CREATED)
 @limiter.limit("30/minute")
 async def create_attendance_analytics(
+    request: Request,
     analytics: AttendanceAnalyticsCreate,
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID")
@@ -1012,6 +1038,7 @@ async def create_attendance_analytics(
 @router.get("/analytics/{analytics_id}", response_model=AttendanceAnalyticsResponse)
 @limiter.limit("200/minute")
 async def get_attendance_analytics(
+    request: Request,
     analytics_id: str = Path(..., description="Attendance analytics ID"),
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID")
@@ -1036,6 +1063,7 @@ async def get_attendance_analytics(
 @router.get("/analytics", response_model=List[AttendanceAnalyticsResponse])
 @limiter.limit("200/minute")
 async def list_attendance_analytics(
+    request: Request,
     db: Session = Depends(get_db),
     tenant_id: str = Query(..., description="Tenant ID"),
     analytics_date: Optional[date] = Query(None, description="Analytics date"),
@@ -1057,6 +1085,7 @@ async def list_attendance_analytics(
 @router.put("/analytics/{analytics_id}", response_model=AttendanceAnalyticsResponse)
 @limiter.limit("30/minute")
 async def update_attendance_analytics(
+    request: Request,
     analytics_update: AttendanceAnalyticsUpdate,
     analytics_id: str = Path(..., description="Attendance analytics ID"),
     db: Session = Depends(get_db),

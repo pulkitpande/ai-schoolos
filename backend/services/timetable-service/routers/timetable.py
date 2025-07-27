@@ -65,11 +65,7 @@ async def root():
 
 @router.post("/subjects", response_model=SubjectResponse, status_code=status.HTTP_201_CREATED)
 @limiter.limit("50/minute")
-async def create_subject(
-    subject: SubjectCreate,
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def create_subject(request: Request, subject: SubjectCreate, db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Create a new subject."""
     try:
         db_subject = Subject(
@@ -214,11 +210,7 @@ async def delete_subject(
 
 @router.post("/teachers", response_model=TeacherResponse, status_code=status.HTTP_201_CREATED)
 @limiter.limit("50/minute")
-async def create_teacher(
-    teacher: TeacherCreate,
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def create_teacher(request: Request, teacher: TeacherCreate, db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Create a new teacher."""
     try:
         db_teacher = Teacher(
@@ -360,11 +352,7 @@ async def delete_teacher(
 
 @router.post("/rooms", response_model=RoomResponse, status_code=status.HTTP_201_CREATED)
 @limiter.limit("50/minute")
-async def create_room(
-    room: RoomCreate,
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def create_room(request: Request, room: RoomCreate, db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Create a new room."""
     try:
         db_room = Room(
