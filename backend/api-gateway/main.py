@@ -191,10 +191,21 @@ async def proxy_api_request_root(service_name: str, request: Request):
                 params=request.query_params,
                 timeout=30.0
             )
+            # Create response content
+            if response.headers.get("content-type", "").startswith("application/json"):
+                content = response.json()
+            else:
+                content = response.text
+            
+            # Create response headers without content-length to let FastAPI handle it
+            headers = dict(response.headers)
+            headers.pop("content-length", None)
+            headers.pop("Content-Length", None)
+            
             return JSONResponse(
-                content=response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text,
+                content=content,
                 status_code=response.status_code,
-                headers=dict(response.headers)
+                headers=headers
             )
         except httpx.RequestError as e:
             logger.error(f"Request to {service_name} failed: {str(e)}")
@@ -229,10 +240,21 @@ async def proxy_api_request(service_name: str, path: str, request: Request):
                 params=request.query_params,
                 timeout=30.0
             )
+            # Create response content
+            if response.headers.get("content-type", "").startswith("application/json"):
+                content = response.json()
+            else:
+                content = response.text
+            
+            # Create response headers without content-length to let FastAPI handle it
+            headers = dict(response.headers)
+            headers.pop("content-length", None)
+            headers.pop("Content-Length", None)
+            
             return JSONResponse(
-                content=response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text,
+                content=content,
                 status_code=response.status_code,
-                headers=dict(response.headers)
+                headers=headers
             )
         except httpx.RequestError as e:
             logger.error(f"Request to {service_name} failed: {str(e)}")
