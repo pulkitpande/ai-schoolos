@@ -74,11 +74,7 @@ async def root():
 @app.get("/health")
 async def health_check():
     """Health check endpoint."""
-    return {
-        "status": "healthy",
-        "service": "communication-service",
-        "version": "1.0.0"
-    }
+    return {"status": "healthy", "service": "communication-service", "version": "1.0.0"}
 
 
 # Include routers
