@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.pool import StaticPool
 
-from .models import Base
+from models import Base
 
 # Database URL
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./config.db")

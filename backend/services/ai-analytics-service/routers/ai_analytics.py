@@ -12,12 +12,12 @@ from sqlalchemy import and_, or_, func
 import pandas as pd
 import numpy as np
 
-from ..database import get_db
-from ..models import (
+from database import get_db
+from models import (
     AIAnalytics, AIPrediction, AIInsight, AITrend, AIPattern, 
     AIRecommendation, AIAlert, AIMetric, AIReport
 )
-from ..schemas import (
+from schemas import (
     AIAnalyticsCreate, AIAnalyticsResponse,
     AIPredictionCreate, AIPredictionResponse,
     AIInsightCreate, AIInsightResponse,

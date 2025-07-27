@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 import uvicorn
 
-from .database import init_db, get_db
+from database import init_db, get_db
 from .routers import ai
 
 # Service configuration

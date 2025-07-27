@@ -10,7 +10,7 @@ Comprehensive timetable management endpoints including:
 
 from datetime import datetime, date, time
 from typing import List, Optional, Dict, Any
-from fastapi import APIRouter, Depends, HTTPException, status, Query, Path
+from fastapi import APIRouter, Depends, HTTPException, status, Query, Path, Request
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, or_, func, desc, asc
 from slowapi import Limiter
