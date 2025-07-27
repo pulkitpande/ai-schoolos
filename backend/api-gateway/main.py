@@ -174,8 +174,8 @@ async def proxy_api_request_root(service_name: str, request: Request):
             detail=f"Service '{service_name}' not found"
         )
     service_config = SERVICES[service_name]
-    # Forward to the service root (service already has its own prefix)
-    target_url = f"{service_config['url']}"
+    # Forward to the service with the service name as path (e.g., /students/)
+    target_url = f"{service_config['url']}/{service_name}/"
     body = None
     if request.method in ["POST", "PUT", "PATCH"]:
         body = await request.body()
@@ -223,8 +223,8 @@ async def proxy_api_request(service_name: str, path: str, request: Request):
             detail=f"Service '{service_name}' not found"
         )
     service_config = SERVICES[service_name]
-    # Forward to /{path} (service already has its own prefix)
-    target_url = f"{service_config['url']}/{path}"
+    # Forward to /{service_name}/{path} (service has its own prefix)
+    target_url = f"{service_config['url']}/{service_name}/{path}"
     body = None
     if request.method in ["POST", "PUT", "PATCH"]:
         body = await request.body()
