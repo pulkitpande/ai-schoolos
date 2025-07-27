@@ -5,6 +5,7 @@ SQLAlchemy models for Attendance Service (AI SchoolOS)
 from datetime import datetime
 import uuid
 import json
+from datetime import date
 from sqlalchemy import (
     Column, String, DateTime, Boolean, ForeignKey, Table, Index, Text, Integer, Date, Float, Numeric
 )

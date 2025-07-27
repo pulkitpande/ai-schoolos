@@ -10,12 +10,12 @@ from fastapi import APIRouter, HTTPException, Depends, Query, status
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, or_
 
-from ..database import get_db
-from ..models import (
+from database import get_db
+from models import (
     Vehicle, Driver, Route, Stop, RouteStop, TransportSchedule, 
     TransportBooking, VehicleTracking, TransportIncident
 )
-from ..schemas import (
+from schemas import (
     VehicleCreate, VehicleUpdate, VehicleResponse,
     DriverCreate, DriverUpdate, DriverResponse,
     RouteCreate, RouteUpdate, RouteResponse,
