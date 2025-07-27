@@ -15,7 +15,7 @@ from models import (
     ConfigTemplate, ConfigOverride
 )
 from database import get_db
-from ..schemas import (
+from schemas import (
     SystemConfigCreate, SystemConfigUpdate, SystemConfigResponse,
     FeatureFlagCreate, FeatureFlagUpdate, FeatureFlagResponse,
     EnvironmentConfigCreate, EnvironmentConfigUpdate, EnvironmentConfigResponse,

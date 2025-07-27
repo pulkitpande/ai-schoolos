@@ -61,11 +61,7 @@ async def root():
 
 @router.post("/records", response_model=AttendanceRecordResponse, status_code=status.HTTP_201_CREATED)
 @limiter.limit("100/minute")
-async def create_attendance_record(
-    record: AttendanceRecordCreate,
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def create_attendance_record(request: Request, record: AttendanceRecordCreate, db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Create a new attendance record."""
     try:
         db_record = AttendanceRecord(
@@ -110,20 +106,7 @@ async def get_attendance_record(
 
 @router.get("/records", response_model=AttendanceRecordList)
 @limiter.limit("200/minute")
-async def list_attendance_records(
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID"),
-    student_id: Optional[str] = Query(None, description="Student ID"),
-    class_id: Optional[str] = Query(None, description="Class ID"),
-    section_id: Optional[str] = Query(None, description="Section ID"),
-    attendance_date: Optional[date] = Query(None, description="Attendance date"),
-    attendance_status: Optional[str] = Query(None, description="Attendance status"),
-    attendance_type: Optional[str] = Query(None, description="Attendance type"),
-    start_date: Optional[date] = Query(None, description="Start date"),
-    end_date: Optional[date] = Query(None, description="End date"),
-    page: int = Query(1, ge=1, description="Page number"),
-    size: int = Query(10, ge=1, le=100, description="Page size")
-):
+async def list_attendance_records(request: Request, db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID"), student_id: Optional[str] = Query(None, description="Student ID"), class_id: Optional[str] = Query(None, description="Class ID"), section_id: Optional[str] = Query(None, description="Section ID"), attendance_date: Optional[date] = Query(None, description="Attendance date"), attendance_status: Optional[str] = Query(None, description="Attendance status"), attendance_type: Optional[str] = Query(None, description="Attendance type"), start_date: Optional[date] = Query(None, description="Start date"), end_date: Optional[date] = Query(None, description="End date"), page: int = Query(1, ge=1, description="Page number"), size: int = Query(10, ge=1, le=100, description="Page size")):
     """List attendance records with filtering and pagination."""
     query = db.query(AttendanceRecord).filter(
         AttendanceRecord.tenant_id == tenant_id
@@ -238,11 +221,7 @@ async def delete_attendance_record(
 
 @router.post("/records/bulk", response_model=BulkAttendanceResponse)
 @limiter.limit("50/minute")
-async def create_bulk_attendance_records(
-    bulk_data: BulkAttendanceCreate,
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def create_bulk_attendance_records(request: Request, bulk_data: BulkAttendanceCreate, db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Create multiple attendance records in bulk."""
     created = 0
     failed = 0
@@ -280,14 +259,7 @@ async def create_bulk_attendance_records(
 
 @router.get("/records/stats", response_model=AttendanceStats)
 @limiter.limit("100/minute")
-async def get_attendance_stats(
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID"),
-    start_date: Optional[date] = Query(None, description="Start date"),
-    end_date: Optional[date] = Query(None, description="End date"),
-    student_id: Optional[str] = Query(None, description="Student ID"),
-    class_id: Optional[str] = Query(None, description="Class ID")
-):
+async def get_attendance_stats(request: Request, db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID"), start_date: Optional[date] = Query(None, description="Start date"), end_date: Optional[date] = Query(None, description="End date"), student_id: Optional[str] = Query(None, description="Student ID"), class_id: Optional[str] = Query(None, description="Class ID")):
     """Get attendance statistics."""
     query = db.query(AttendanceRecord).filter(
         AttendanceRecord.tenant_id == tenant_id

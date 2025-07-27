@@ -509,11 +509,7 @@ async def delete_room(
 
 @router.post("/time-slots", response_model=TimeSlotResponse, status_code=status.HTTP_201_CREATED)
 @limiter.limit("50/minute")
-async def create_time_slot(
-    time_slot: TimeSlotCreate,
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def create_time_slot(request: Request, time_slot: TimeSlotCreate, db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Create a new time slot."""
     try:
         db_time_slot = TimeSlot(
@@ -558,13 +554,7 @@ async def get_time_slot(
 
 @router.get("/time-slots", response_model=List[TimeSlotResponse])
 @limiter.limit("200/minute")
-async def list_time_slots(
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID"),
-    day_of_week: Optional[str] = Query(None, description="Day of week"),
-    is_break: Optional[bool] = Query(None, description="Is break"),
-    is_active: Optional[bool] = Query(None, description="Is active")
-):
+async def list_time_slots(request: Request, db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID"), day_of_week: Optional[str] = Query(None, description="Day of week"), is_break: Optional[bool] = Query(None, description="Is break"), is_active: Optional[bool] = Query(None, description="Is active")):
     """List time slots with filtering."""
     query = db.query(TimeSlot).filter(
         TimeSlot.tenant_id == tenant_id
@@ -658,11 +648,7 @@ async def delete_time_slot(
 
 @router.post("/slots", response_model=TimetableSlotResponse, status_code=status.HTTP_201_CREATED)
 @limiter.limit("100/minute")
-async def create_timetable_slot(
-    slot: TimetableSlotCreate,
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def create_timetable_slot(request: Request, slot: TimetableSlotCreate, db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Create a new timetable slot."""
     try:
         db_slot = TimetableSlot(
@@ -707,19 +693,7 @@ async def get_timetable_slot(
 
 @router.get("/slots", response_model=List[TimetableSlotResponse])
 @limiter.limit("200/minute")
-async def list_timetable_slots(
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID"),
-    class_id: Optional[str] = Query(None, description="Class ID"),
-    section_id: Optional[str] = Query(None, description="Section ID"),
-    subject_id: Optional[str] = Query(None, description="Subject ID"),
-    teacher_id: Optional[str] = Query(None, description="Teacher ID"),
-    room_id: Optional[str] = Query(None, description="Room ID"),
-    day_of_week: Optional[str] = Query(None, description="Day of week"),
-    academic_year: Optional[str] = Query(None, description="Academic year"),
-    semester: Optional[str] = Query(None, description="Semester"),
-    is_active: Optional[bool] = Query(None, description="Is active")
-):
+async def list_timetable_slots(request: Request, db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID"), class_id: Optional[str] = Query(None, description="Class ID"), section_id: Optional[str] = Query(None, description="Section ID"), subject_id: Optional[str] = Query(None, description="Subject ID"), teacher_id: Optional[str] = Query(None, description="Teacher ID"), room_id: Optional[str] = Query(None, description="Room ID"), day_of_week: Optional[str] = Query(None, description="Day of week"), academic_year: Optional[str] = Query(None, description="Academic year"), semester: Optional[str] = Query(None, description="Semester"), is_active: Optional[bool] = Query(None, description="Is active")):
     """List timetable slots with filtering."""
     query = db.query(TimetableSlot).filter(
         TimetableSlot.tenant_id == tenant_id

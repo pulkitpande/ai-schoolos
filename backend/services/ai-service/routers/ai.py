@@ -10,12 +10,12 @@ from fastapi import APIRouter, HTTPException, Depends, Query, status, UploadFile
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, or_
 
-from ..database import get_db
-from ..models import (
+from database import get_db
+from models import (
     AIModel, AIInference, AITraining, AIDataset, AIFeature, 
     AIPrediction, AIVision, AINLP, AIRecommendation
 )
-from ..schemas import (
+from schemas import (
     AIModelCreate, AIModelUpdate, AIModelResponse,
     AIInferenceCreate, AIInferenceResponse,
     AITrainingCreate, AITrainingUpdate, AITrainingResponse,
