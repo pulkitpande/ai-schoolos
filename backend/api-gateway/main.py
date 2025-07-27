@@ -176,6 +176,43 @@ async def proxy_api_request_root(service_name: str, request: Request):
     service_config = SERVICES[service_name]
     # Forward to the service with the service name as path (e.g., /students/)
     target_url = f"{service_config['url']}/{service_name}/"
+    
+    # For GET requests to service root, try to get available endpoints
+    if request.method == "GET":
+        try:
+            # Try to get the root endpoint
+            async with httpx.AsyncClient() as client:
+                response = await client.get(target_url, timeout=5.0)
+                if response.status_code == 200:
+                    # If root endpoint exists, return it
+                    return JSONResponse(
+                        content=response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text,
+                        status_code=response.status_code
+                    )
+                else:
+                    # If root endpoint doesn't exist, return available endpoints info
+                    return JSONResponse(
+                        content={
+                            "message": f"Service '{service_name}' is available",
+                            "service": service_name,
+                            "available_endpoints": [
+                                f"/api/v1/{service_name}/structures",  # For fees
+                                f"/api/v1/{service_name}/students",    # For fees
+                                f"/api/v1/{service_name}/bills",       # For fees
+                                f"/api/v1/{service_name}/payments",    # For fees
+                                f"/api/v1/{service_name}/discounts",   # For fees
+                                f"/api/v1/{service_name}/summary",     # For fees
+                            ],
+                            "note": "This service requires specific endpoints. Use one of the available endpoints above."
+                        },
+                        status_code=200
+                    )
+        except httpx.RequestError:
+            # If service is not reachable, return error
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail=f"Service '{service_name}' is unavailable"
+            )
     body = None
     if request.method in ["POST", "PUT", "PATCH"]:
         body = await request.body()
