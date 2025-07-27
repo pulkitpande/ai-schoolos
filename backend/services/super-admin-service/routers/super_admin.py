@@ -10,12 +10,12 @@ from fastapi import APIRouter, HTTPException, Depends, Query, status
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, or_
 
-from ..database import get_db
-from ..models import (
+from database import get_db
+from models import (
     Tenant, SystemConfig, AdminUser, AuditLog, SystemBackup, 
     SystemMaintenance, License, Subscription
 )
-from ..schemas import (
+from schemas import (
     TenantCreate, TenantUpdate, TenantResponse,
     SystemConfigCreate, SystemConfigUpdate, SystemConfigResponse,
     AdminUserCreate, AdminUserUpdate, AdminUserResponse,

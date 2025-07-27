@@ -10,7 +10,7 @@ from fastapi import APIRouter, HTTPException, Depends, Query, status
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, or_
 
-from ..database import get_db
+from database import get_db
 from ..models import (
     SystemConfig, FeatureFlag, EnvironmentConfig, ServiceConfig, 
     ConfigTemplate, ConfigOverride
