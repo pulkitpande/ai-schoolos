@@ -86,11 +86,7 @@ async def create_subject(request: Request, subject: SubjectCreate, db: Session =
 
 @router.get("/subjects/{subject_id}", response_model=SubjectResponse)
 @limiter.limit("200/minute")
-async def get_subject(
-    subject_id: str = Path(..., description="Subject ID"),
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def get_subject(request: Request, subject_id: str = Path(..., description="Subject ID"), db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Get a specific subject."""
     subject = db.query(Subject).filter(
         and_(
@@ -110,13 +106,7 @@ async def get_subject(
 
 @router.get("/subjects", response_model=List[SubjectResponse])
 @limiter.limit("200/minute")
-async def list_subjects(
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID"),
-    subject_type: Optional[str] = Query(None, description="Subject type"),
-    subject_category: Optional[str] = Query(None, description="Subject category"),
-    is_active: Optional[bool] = Query(None, description="Is active")
-):
+async def list_subjects(request: Request, db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID"), subject_type: Optional[str] = Query(None, description="Subject type"), subject_category: Optional[str] = Query(None, description="Subject category"), is_active: Optional[bool] = Query(None, description="Is active")):
     """List subjects with filtering."""
     query = db.query(Subject).filter(
         Subject.tenant_id == tenant_id
@@ -134,12 +124,7 @@ async def list_subjects(
 
 @router.put("/subjects/{subject_id}", response_model=SubjectResponse)
 @limiter.limit("50/minute")
-async def update_subject(
-    subject_update: SubjectUpdate,
-    subject_id: str = Path(..., description="Subject ID"),
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def update_subject(request: Request, subject_update: SubjectUpdate, subject_id: str = Path(..., description="Subject ID"), db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Update a subject."""
     subject = db.query(Subject).filter(
         and_(
@@ -173,11 +158,7 @@ async def update_subject(
 
 @router.delete("/subjects/{subject_id}", response_model=SuccessResponse)
 @limiter.limit("30/minute")
-async def delete_subject(
-    subject_id: str = Path(..., description="Subject ID"),
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def delete_subject(request: Request, subject_id: str = Path(..., description="Subject ID"), db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Delete a subject."""
     subject = db.query(Subject).filter(
         and_(
