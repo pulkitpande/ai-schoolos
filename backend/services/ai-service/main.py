@@ -8,6 +8,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 import uvicorn
+from fastapi.responses import JSONResponse
 
 from database import init_db, get_db
 from routers import ai
@@ -86,13 +87,13 @@ async def root():
 @app.exception_handler(404)
 async def not_found_handler(request, exc):
     """Handle 404 errors."""
-    return {"error": "Resource not found", "detail": str(exc)}
+    return JSONResponse(content={"error": "Resource not found", "detail": str(exc)}, status_code=404)
 
 
 @app.exception_handler(500)
 async def internal_error_handler(request, exc):
     """Handle 500 errors."""
-    return {"error": "Internal server error", "detail": str(exc)}
+    return JSONResponse(content={"error": "Internal server error", "detail": str(exc)}, status_code=500)
 
 
 if __name__ == "__main__":
