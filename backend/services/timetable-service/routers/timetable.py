@@ -212,11 +212,7 @@ async def create_teacher(request: Request, teacher: TeacherCreate, db: Session =
 
 @router.get("/teachers/{teacher_id}", response_model=TeacherResponse)
 @limiter.limit("200/minute")
-async def get_teacher(
-    teacher_id: str = Path(..., description="Teacher ID"),
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def get_teacher(request: Request, teacher_id: str = Path(..., description="Teacher ID"), db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Get a specific teacher."""
     teacher = db.query(Teacher).filter(
         and_(
@@ -236,12 +232,7 @@ async def get_teacher(
 
 @router.get("/teachers", response_model=List[TeacherResponse])
 @limiter.limit("200/minute")
-async def list_teachers(
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID"),
-    is_active: Optional[bool] = Query(None, description="Is active"),
-    is_full_time: Optional[bool] = Query(None, description="Is full time")
-):
+async def list_teachers(request: Request, db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID"), is_active: Optional[bool] = Query(None, description="Is active"), is_full_time: Optional[bool] = Query(None, description="Is full time")):
     """List teachers with filtering."""
     query = db.query(Teacher).filter(
         Teacher.tenant_id == tenant_id
@@ -257,12 +248,7 @@ async def list_teachers(
 
 @router.put("/teachers/{teacher_id}", response_model=TeacherResponse)
 @limiter.limit("50/minute")
-async def update_teacher(
-    teacher_update: TeacherUpdate,
-    teacher_id: str = Path(..., description="Teacher ID"),
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def update_teacher(request: Request, teacher_update: TeacherUpdate, teacher_id: str = Path(..., description="Teacher ID"), db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Update a teacher."""
     teacher = db.query(Teacher).filter(
         and_(
@@ -296,11 +282,7 @@ async def update_teacher(
 
 @router.delete("/teachers/{teacher_id}", response_model=SuccessResponse)
 @limiter.limit("30/minute")
-async def delete_teacher(
-    teacher_id: str = Path(..., description="Teacher ID"),
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def delete_teacher(request: Request, teacher_id: str = Path(..., description="Teacher ID"), db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Delete a teacher."""
     teacher = db.query(Teacher).filter(
         and_(
@@ -354,11 +336,7 @@ async def create_room(request: Request, room: RoomCreate, db: Session = Depends(
 
 @router.get("/rooms/{room_id}", response_model=RoomResponse)
 @limiter.limit("200/minute")
-async def get_room(
-    room_id: str = Path(..., description="Room ID"),
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def get_room(request: Request, room_id: str = Path(..., description="Room ID"), db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Get a specific room."""
     room = db.query(Room).filter(
         and_(
@@ -378,13 +356,7 @@ async def get_room(
 
 @router.get("/rooms", response_model=List[RoomResponse])
 @limiter.limit("200/minute")
-async def list_rooms(
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID"),
-    room_type: Optional[str] = Query(None, description="Room type"),
-    is_active: Optional[bool] = Query(None, description="Is active"),
-    is_available: Optional[bool] = Query(None, description="Is available")
-):
+async def list_rooms(request: Request, db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID"), room_type: Optional[str] = Query(None, description="Room type"), is_active: Optional[bool] = Query(None, description="Is active"), is_available: Optional[bool] = Query(None, description="Is available")):
     """List rooms with filtering."""
     query = db.query(Room).filter(
         Room.tenant_id == tenant_id
@@ -402,12 +374,7 @@ async def list_rooms(
 
 @router.put("/rooms/{room_id}", response_model=RoomResponse)
 @limiter.limit("50/minute")
-async def update_room(
-    room_update: RoomUpdate,
-    room_id: str = Path(..., description="Room ID"),
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def update_room(request: Request, room_update: RoomUpdate, room_id: str = Path(..., description="Room ID"), db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Update a room."""
     room = db.query(Room).filter(
         and_(
@@ -441,11 +408,7 @@ async def update_room(
 
 @router.delete("/rooms/{room_id}", response_model=SuccessResponse)
 @limiter.limit("30/minute")
-async def delete_room(
-    room_id: str = Path(..., description="Room ID"),
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def delete_room(request: Request, room_id: str = Path(..., description="Room ID"), db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Delete a room."""
     room = db.query(Room).filter(
         and_(
@@ -499,11 +462,7 @@ async def create_time_slot(request: Request, time_slot: TimeSlotCreate, db: Sess
 
 @router.get("/time-slots/{time_slot_id}", response_model=TimeSlotResponse)
 @limiter.limit("200/minute")
-async def get_time_slot(
-    time_slot_id: str = Path(..., description="Time slot ID"),
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def get_time_slot(request: Request, time_slot_id: str = Path(..., description="Time slot ID"), db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Get a specific time slot."""
     time_slot = db.query(TimeSlot).filter(
         and_(
@@ -541,12 +500,7 @@ async def list_time_slots(request: Request, db: Session = Depends(get_db), tenan
 
 @router.put("/time-slots/{time_slot_id}", response_model=TimeSlotResponse)
 @limiter.limit("50/minute")
-async def update_time_slot(
-    time_slot_update: TimeSlotUpdate,
-    time_slot_id: str = Path(..., description="Time slot ID"),
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def update_time_slot(request: Request, time_slot_update: TimeSlotUpdate, time_slot_id: str = Path(..., description="Time slot ID"), db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Update a time slot."""
     time_slot = db.query(TimeSlot).filter(
         and_(
@@ -580,11 +534,7 @@ async def update_time_slot(
 
 @router.delete("/time-slots/{time_slot_id}", response_model=SuccessResponse)
 @limiter.limit("30/minute")
-async def delete_time_slot(
-    time_slot_id: str = Path(..., description="Time slot ID"),
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def delete_time_slot(request: Request, time_slot_id: str = Path(..., description="Time slot ID"), db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Delete a time slot."""
     time_slot = db.query(TimeSlot).filter(
         and_(
@@ -638,11 +588,7 @@ async def create_timetable_slot(request: Request, slot: TimetableSlotCreate, db:
 
 @router.get("/slots/{slot_id}", response_model=TimetableSlotResponse)
 @limiter.limit("200/minute")
-async def get_timetable_slot(
-    slot_id: str = Path(..., description="Timetable slot ID"),
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def get_timetable_slot(request: Request, slot_id: str = Path(..., description="Timetable slot ID"), db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Get a specific timetable slot."""
     slot = db.query(TimetableSlot).filter(
         and_(
@@ -692,12 +638,7 @@ async def list_timetable_slots(request: Request, db: Session = Depends(get_db), 
 
 @router.put("/slots/{slot_id}", response_model=TimetableSlotResponse)
 @limiter.limit("100/minute")
-async def update_timetable_slot(
-    slot_update: TimetableSlotUpdate,
-    slot_id: str = Path(..., description="Timetable slot ID"),
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def update_timetable_slot(request: Request, slot_update: TimetableSlotUpdate, slot_id: str = Path(..., description="Timetable slot ID"), db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Update a timetable slot."""
     slot = db.query(TimetableSlot).filter(
         and_(
@@ -731,11 +672,7 @@ async def update_timetable_slot(
 
 @router.delete("/slots/{slot_id}", response_model=SuccessResponse)
 @limiter.limit("50/minute")
-async def delete_timetable_slot(
-    slot_id: str = Path(..., description="Timetable slot ID"),
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID")
-):
+async def delete_timetable_slot(request: Request, slot_id: str = Path(..., description="Timetable slot ID"), db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID")):
     """Delete a timetable slot."""
     slot = db.query(TimetableSlot).filter(
         and_(
@@ -768,11 +705,7 @@ async def delete_timetable_slot(
 
 @router.get("/stats", response_model=TimetableStats)
 @limiter.limit("100/minute")
-async def get_timetable_stats(
-    db: Session = Depends(get_db),
-    tenant_id: str = Query(..., description="Tenant ID"),
-    academic_year: Optional[str] = Query(None, description="Academic year")
-):
+async def get_timetable_stats(request: Request, db: Session = Depends(get_db), tenant_id: str = Query(..., description="Tenant ID"), academic_year: Optional[str] = Query(None, description="Academic year")):
     """Get timetable statistics."""
     # Count total slots
     slots_query = db.query(TimetableSlot).filter(
