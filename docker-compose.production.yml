@@ -213,6 +213,11 @@ services:
     networks:
       - ai-schoolos-network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8005/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   # Library Service
   library-service:
@@ -235,6 +240,11 @@ services:
     networks:
       - ai-schoolos-network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8007/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   # Exam Service
   exam-service:
@@ -257,6 +267,11 @@ services:
     networks:
       - ai-schoolos-network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8005/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   # Timetable Service
   timetable-service:
@@ -279,6 +294,11 @@ services:
     networks:
       - ai-schoolos-network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8012/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   # Attendance Service
   attendance-service:
@@ -301,6 +321,11 @@ services:
     networks:
       - ai-schoolos-network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8011/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   # Transport Service
   transport-service:
@@ -367,6 +392,11 @@ services:
     networks:
       - ai-schoolos-network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8010/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   # Notification Service
   notification-service:
@@ -389,6 +419,11 @@ services:
     networks:
       - ai-schoolos-network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8008/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   # Config Service
   config-service:
