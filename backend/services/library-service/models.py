@@ -82,7 +82,7 @@ class Book(Base):
     
     # Additional Information
     cover_image: Mapped[str] = mapped_column(String(500), nullable=True)
-    metadata: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)
+    meta_info: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)
     
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

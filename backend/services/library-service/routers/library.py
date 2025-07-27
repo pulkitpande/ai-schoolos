@@ -31,7 +31,7 @@ router = APIRouter(prefix="/library", tags=["library"])
 
 
 @router.get("/status")
-async def status():
+async def service_status():
     return {"message": "Library Service is running"}
 
 @router.get("/", response_model=BookListResponse)

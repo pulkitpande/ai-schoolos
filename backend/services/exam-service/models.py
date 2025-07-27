@@ -112,7 +112,7 @@ class Question(Base):
     
     # Additional Data
     explanation: Mapped[str] = mapped_column(Text, nullable=True)
-    metadata: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)
+    meta_info: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)
     
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

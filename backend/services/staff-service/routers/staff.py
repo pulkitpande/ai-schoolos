@@ -26,7 +26,7 @@ router = APIRouter(prefix="/staff", tags=["staff"])
 
 
 @router.get("/status")
-async def status():
+async def service_status():
     return {"message": "Staff Service is running"}
 
 

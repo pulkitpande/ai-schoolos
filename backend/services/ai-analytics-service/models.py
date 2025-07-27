@@ -16,7 +16,7 @@ class AIAnalytics(Base):
     insights = Column(JSON, nullable=True)
     visualizations = Column(JSON, nullable=True)
     confidence_score = Column(Float, nullable=True)
-    metadata = Column(JSON, nullable=True)
+    meta_info = Column(JSON, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
@@ -33,7 +33,7 @@ class AIPrediction(Base):
     confidence_score = Column(Float, nullable=True)
     accuracy_metrics = Column(JSON, nullable=True)
     model_info = Column(JSON, nullable=True)
-    metadata = Column(JSON, nullable=True)
+    meta_info = Column(JSON, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
@@ -50,7 +50,7 @@ class AIInsight(Base):
     confidence_score = Column(Float, nullable=True)
     impact_score = Column(Float, nullable=True)
     recommendations = Column(JSON, nullable=True)
-    metadata = Column(JSON, nullable=True)
+    meta_info = Column(JSON, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
@@ -67,7 +67,7 @@ class AITrend(Base):
     trend_strength = Column(Float, nullable=True)
     trend_confidence = Column(Float, nullable=True)
     trend_implications = Column(JSON, nullable=True)
-    metadata = Column(JSON, nullable=True)
+    meta_info = Column(JSON, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
@@ -84,7 +84,7 @@ class AIPattern(Base):
     pattern_frequency = Column(Float, nullable=True)
     pattern_significance = Column(Float, nullable=True)
     pattern_implications = Column(JSON, nullable=True)
-    metadata = Column(JSON, nullable=True)
+    meta_info = Column(JSON, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
@@ -101,7 +101,7 @@ class AIRecommendation(Base):
     priority_level = Column(String, nullable=False)
     expected_impact = Column(Float, nullable=True)
     implementation_difficulty = Column(String, nullable=True)
-    metadata = Column(JSON, nullable=True)
+    meta_info = Column(JSON, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
@@ -118,7 +118,7 @@ class AIAlert(Base):
     alert_status = Column(String, nullable=False, default="active")
     alert_acknowledged = Column(Boolean, default=False)
     alert_resolved = Column(Boolean, default=False)
-    metadata = Column(JSON, nullable=True)
+    meta_info = Column(JSON, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
@@ -135,7 +135,7 @@ class AIMetric(Base):
     metric_trend = Column(String, nullable=True)
     metric_threshold = Column(Float, nullable=True)
     metric_status = Column(String, nullable=True)
-    metadata = Column(JSON, nullable=True)
+    meta_info = Column(JSON, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
@@ -152,6 +152,6 @@ class AIReport(Base):
     report_generated_at = Column(DateTime(timezone=True), server_default=func.now())
     report_scheduled = Column(Boolean, default=False)
     report_frequency = Column(String, nullable=True)
-    metadata = Column(JSON, nullable=True)
+    meta_info = Column(JSON, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now()) 

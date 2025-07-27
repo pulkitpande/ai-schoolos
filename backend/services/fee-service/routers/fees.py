@@ -28,7 +28,7 @@ router = APIRouter(prefix="/fees", tags=["fees"])
 
 
 @router.get("/status")
-async def status():
+async def service_status():
     return {"message": "Fee Service is running"}
 
 @router.get("/", response_model=FeeStructureListResponse)

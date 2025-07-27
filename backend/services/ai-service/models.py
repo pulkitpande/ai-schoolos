@@ -90,7 +90,7 @@ class AIInference(Base):
     
     # Inference Details
     inference_type: Mapped[str] = mapped_column(String(50), nullable=False)
-    metadata: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)
+    meta_info: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)
     
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
@@ -201,7 +201,7 @@ class AIPrediction(Base):
     # Performance Metrics
     confidence_score: Mapped[float] = mapped_column(Float, nullable=False)
     accuracy_metrics: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)
-    metadata: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)
+    meta_info: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)
     
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
@@ -230,7 +230,7 @@ class AIVision(Base):
     
     # Performance Metrics
     processing_time: Mapped[float] = mapped_column(Float, nullable=False)
-    metadata: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)
+    meta_info: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)
     
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
@@ -259,7 +259,7 @@ class AINLP(Base):
     
     # Performance Metrics
     processing_time: Mapped[float] = mapped_column(Float, nullable=False)
-    metadata: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)
+    meta_info: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)
     
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
@@ -286,7 +286,7 @@ class AIRecommendation(Base):
     
     # Context Information
     context_data: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)
-    metadata: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)
+    meta_info: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)
     
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

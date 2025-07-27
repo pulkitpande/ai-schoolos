@@ -237,7 +237,7 @@ class MetricValue(Base):
     
     # Additional Data
     dimensions: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)  # Dimension values
-    metadata: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)  # Additional metadata
+    meta_info: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)  # Additional metadata
     
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

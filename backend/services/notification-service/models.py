@@ -77,7 +77,7 @@ class Notification(Base):
     
     # Additional Settings
     channels: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)  # Which channels to use
-    metadata: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)
+    meta_info: Mapped[dict] = mapped_column(JSONEncodedDict, default=dict)
     
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
