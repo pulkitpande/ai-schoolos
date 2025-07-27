@@ -167,15 +167,15 @@ async def services_health_check():
 
 @app.api_route("/api/v1/{service_name}", methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
 async def proxy_api_request_root(service_name: str, request: Request):
-    """Proxy API v1 root requests to appropriate microservices, stripping /api/v1/ prefix."""
+    """Proxy API v1 root requests to appropriate microservices."""
     if service_name not in SERVICES:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Service '{service_name}' not found"
         )
     service_config = SERVICES[service_name]
-    # Forward to the service root (strip /api/v1)
-    target_url = f"{service_config['url']}/"
+    # Forward to the service with the service name as the path
+    target_url = f"{service_config['url']}/{service_name}"
     body = None
     if request.method in ["POST", "PUT", "PATCH"]:
         body = await request.body()
@@ -205,15 +205,15 @@ async def proxy_api_request_root(service_name: str, request: Request):
 
 @app.api_route("/api/v1/{service_name}/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
 async def proxy_api_request(service_name: str, path: str, request: Request):
-    """Proxy API v1 requests to appropriate microservices, stripping /api/v1/ prefix."""
+    """Proxy API v1 requests to appropriate microservices."""
     if service_name not in SERVICES:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Service '{service_name}' not found"
         )
     service_config = SERVICES[service_name]
-    # Forward to /{path} (strip /api/v1/{service_name})
-    target_url = f"{service_config['url']}/{path}"
+    # Forward to /{service_name}/{path}
+    target_url = f"{service_config['url']}/{service_name}/{path}"
     body = None
     if request.method in ["POST", "PUT", "PATCH"]:
         body = await request.body()
