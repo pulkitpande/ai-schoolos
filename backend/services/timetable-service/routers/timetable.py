@@ -16,11 +16,11 @@ from sqlalchemy import and_, or_, func, desc, asc
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 
-from database import get_db
 from models import (
     Subject, Teacher, Room, TimeSlot, TimetableSlot, TimetableConstraint,
     TimetableSchedule, TimetableConflict, TimetableTemplate
 )
+from database import get_db
 from schemas import (
     # Subjects
     SubjectCreate, SubjectUpdate, SubjectResponse,

@@ -10,7 +10,7 @@ from fastapi.middleware.trustedhost import TrustedHostMiddleware
 import uvicorn
 
 from database import init_db, get_db
-from .routers import ai
+from routers import ai
 
 # Service configuration
 SERVICE_NAME = "ai-service"
